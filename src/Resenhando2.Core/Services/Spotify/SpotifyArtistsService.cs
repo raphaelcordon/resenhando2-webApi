@@ -11,7 +11,6 @@ public class SpotifyArtistsService
     private readonly SpotifyAuthConfig _spotifyAuthConfig;
     private SpotifyClient _spotifyClient;
     
-
     public SpotifyArtistsService(SpotifyAuthConfig spotifyAuthConfig)
     {
         _spotifyAuthConfig = spotifyAuthConfig;
@@ -64,18 +63,19 @@ public class SpotifyArtistsService
         return spotifyArtist;
     }
 
-    public async Task<List<SpotifyArtist>> GetSearchArtistsAsync(string searchItem, int limit, int offset)
+    public async Task<List<SpotifyArtist>> GetSearchArtistsAsync(string searchItem, int limit)
     {
         if (_spotifyClient == null)
         {
             throw new InvalidOperationException("Spotify client is not initialized. Call InitializeAsync first.");
         }
 
-        var searchRequest = new SearchRequest(SearchRequest.Types.Artist, searchItem)
+        var formattedSearchItem = $"artist:{searchItem}";
+        var searchRequest = new SearchRequest(SearchRequest.Types.Artist, formattedSearchItem)
         {
-            Limit = limit,
-            Offset = offset
+            Limit = limit
         };
+
         var searchResponse = await _spotifyClient.Search.Item(searchRequest);
         var artistItems = searchResponse.Artists.Items;
         

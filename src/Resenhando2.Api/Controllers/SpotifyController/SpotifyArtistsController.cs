@@ -15,19 +15,19 @@ public class SpotifyArtistsController : ControllerBase
         _spotify = spotify;
     }
 
-    [HttpGet("GetArtistById")]
+    [HttpGet("GetArtistById/{id}")]
     public async Task<IActionResult> GetArtistById(string id = "0d5ZwMtCer8dQdOPAgWhe7")
     {
         await _spotify.InitializeAsync();
-        var result = await _spotify.GetArtistByIdAsync("0d5ZwMtCer8dQdOPAgWhe7");
+        var result = await _spotify.GetArtistByIdAsync(id);
         return Ok(result);
     }
 
-    [HttpGet("GetSearchByArtists")]
-    public async Task<IActionResult> GetSearchByArtists(string searchItem, int limit = 5, int offset = 1)
+    [HttpGet("GetSearchByArtists/{searchItem}")]
+    public async Task<IActionResult> GetSearchByArtists([FromRoute]string searchItem, [FromQuery]int limit = 5)
     {
         await _spotify.InitializeAsync();
-        var result = await _spotify.GetSearchArtistsAsync(searchItem, limit, offset);
+        var result = await _spotify.GetSearchArtistsAsync(searchItem, limit);
         return Ok(result);
     }
     
