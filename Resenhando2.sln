@@ -1,0 +1,22 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Resenhando2.Api", "src\Resenhando2.Api\Resenhando2.Api.csproj", "{AD9BA658-D68F-4558-9100-5359ADA36FED}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Resenhando2.Core", "src\Resenhando2.Core\Resenhando2.Core.csproj", "{540AF8E4-EB03-4E8D-82BF-B3E9807851AE}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{AD9BA658-D68F-4558-9100-5359ADA36FED}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AD9BA658-D68F-4558-9100-5359ADA36FED}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AD9BA658-D68F-4558-9100-5359ADA36FED}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AD9BA658-D68F-4558-9100-5359ADA36FED}.Release|Any CPU.Build.0 = Release|Any CPU
+		{540AF8E4-EB03-4E8D-82BF-B3E9807851AE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{540AF8E4-EB03-4E8D-82BF-B3E9807851AE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{540AF8E4-EB03-4E8D-82BF-B3E9807851AE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{540AF8E4-EB03-4E8D-82BF-B3E9807851AE}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal

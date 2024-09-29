@@ -1,0 +1,6 @@
+@Resenhando2.Api_HostAddress = http://localhost:5065
+
+GET {{Resenhando2.Api_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
