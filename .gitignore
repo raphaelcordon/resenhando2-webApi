@@ -4,4 +4,4 @@ obj/
 riderModule.iml
 /_ReSharper.Caches/
 .idea
-appsettings.Development.json
+src/Resenhando2.Api/appsettings.Development.json
