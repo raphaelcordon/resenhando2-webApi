@@ -10,11 +10,11 @@ public static class DependencyInjections
         IConfiguration configuration)
     {
         
-        var spotifyClientId = configuration["Spotify:clientId"] ?? 
-                              Environment.GetEnvironmentVariable("spotifyClientId");
+        var spotifyClientId = Environment.GetEnvironmentVariable("spotifyClientId") ??
+                              configuration["Spotify:clientId"];
 
-        var spotifyClientSecret = configuration["Spotify:clientSecret"] ?? 
-                                  Environment.GetEnvironmentVariable("spotifyClientSecret");
+        var spotifyClientSecret = Environment.GetEnvironmentVariable("spotifyClientSecret") ??
+                                  configuration["Spotify:clientSecret"];
         
         services.AddScoped(_ => new SpotifyAuthConfig(spotifyClientId, spotifyClientSecret));
         services.AddScoped<SpotifyArtistsService>();
