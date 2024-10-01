@@ -1,5 +1,4 @@
 using Microsoft.AspNetCore.Mvc;
-using Resenhando2.Core.Services;
 using Resenhando2.Core.Services.Spotify;
 
 namespace Resenhando2.Api.Controllers.SpotifyController;

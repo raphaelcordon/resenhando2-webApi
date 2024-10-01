@@ -1,7 +1,5 @@
 using Resenhando2.Core.Entities.SpotifyEntities;
 using SpotifyAPI.Web;
-using Followers = Resenhando2.Core.Entities.SpotifyEntities.Followers;
-using Image = Resenhando2.Core.Entities.SpotifyEntities.Image;
 
 namespace Resenhando2.Core.Services.Spotify;
 
