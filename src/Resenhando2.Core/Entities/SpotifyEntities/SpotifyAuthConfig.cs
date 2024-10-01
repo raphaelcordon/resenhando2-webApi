@@ -1,13 +1,7 @@
 namespace Resenhando2.Core.Entities.SpotifyEntities;
 
-public class SpotifyAuthConfig
+public class SpotifyAuthConfig(string clientId, string clientSecret)
 {
-    public string ClientId { get; }
-    public string ClientSecret { get; }
-
-    public SpotifyAuthConfig(string clientId, string clientSecret)
-    {
-        ClientId = clientId;
-        ClientSecret = clientSecret;
-    }
+    public string ClientId { get; } = clientId;
+    public string ClientSecret { get; } = clientSecret;
 }

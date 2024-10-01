@@ -6,29 +6,19 @@ namespace Resenhando2.Api.Controllers.SpotifyController;
 
 [ApiController]
 [Route("/api/[controller]/")]
-public class SpotifyArtistsController : ControllerBase
+public class SpotifyArtistsController(SpotifyArtistsService spotify) : ControllerBase
 {
-    private readonly SpotifyArtistsService _spotify;
-    
-    public SpotifyArtistsController(SpotifyArtistsService spotify)
-    {
-        _spotify = spotify;
-    }
-
     [HttpGet("GetArtistById/{id}")]
     public async Task<IActionResult> GetArtistById(string id = "0d5ZwMtCer8dQdOPAgWhe7")
     {
-        await _spotify.InitializeAsync();
-        var result = await _spotify.GetArtistByIdAsync(id);
+        var result = await spotify.GetArtistByIdAsync(id);
         return Ok(result);
     }
 
     [HttpGet("GetSearchByArtists/{searchItem}")]
     public async Task<IActionResult> GetSearchByArtists([FromRoute]string searchItem, [FromQuery]int limit = 5)
     {
-        await _spotify.InitializeAsync();
-        var result = await _spotify.GetSearchArtistsAsync(searchItem, limit);
+        var result = await spotify.GetSearchArtistsAsync(searchItem, limit);
         return Ok(result);
     }
-    
 }
