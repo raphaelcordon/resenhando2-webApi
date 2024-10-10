@@ -1,7 +1,4 @@
 using Resenhando2.Api.Extensions;
-using Resenhando2.Core.Entities;
-using Resenhando2.Core.Services;
-using SpotifyAPI.Web;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddDependencyInjections(builder.Configuration);

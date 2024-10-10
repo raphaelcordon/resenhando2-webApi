@@ -1,11 +1,11 @@
 using Resenhando2.Core.Entities.SpotifyEntities;
 using SpotifyAPI.Web;
 
-namespace Resenhando2.Core.Services.Spotify;
+namespace Resenhando2.Api.Services.SpotifyServices;
 
 public class SpotifyArtistsService
 {
-    private SpotifyClient _spotifyClient;
+    private readonly SpotifyClient _spotifyClient;
     
     public SpotifyArtistsService(SpotifyAuthConfig spotifyAuthConfig)
     {
