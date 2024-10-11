@@ -54,12 +54,6 @@ jobs:
           client-id: ${{ secrets.AZUREAPPSERVICE_CLIENTID_B8678BAC6FEB4DFB99577FF0857FA8C6 }}
           tenant-id: ${{ secrets.AZUREAPPSERVICE_TENANTID_50438381A7D248DC82FFE159E334CF39 }}
           subscription-id: ${{ secrets.AZUREAPPSERVICE_SUBSCRIPTIONID_EF64C5A953F14A27A702FF174DF0CD16 }}
-      
-      # Set environment variables for Spotify from GitHub secrets
-      - name: Set Spotify Secrets
-        run: |
-          echo "SPOTIFY_CLIENT_ID=${{ secrets.SPOTIFY_CLIENT_ID }}" >> $GITHUB_ENV
-          echo "SPOTIFY_CLIENT_SECRET=${{ secrets.SPOTIFY_CLIENT_SECRET }}" >> $GITHUB_ENV
           
       - name: Deploy to Azure Web App
         id: deploy-to-webapp
