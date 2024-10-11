@@ -40,7 +40,7 @@ jobs:
         with:
           name: .net-app
 
-      # Login to Azure using Service Principal (with client-secret)
+      # Login to Azure using Service Principal
       - name: Login to Azure
         uses: azure/login@v2
         with:
@@ -48,6 +48,7 @@ jobs:
           tenant-id: ${{ secrets.AZUREAPPSERVICE_TENANTID }}
           subscription-id: ${{ secrets.AZUREAPPSERVICE_SUBSCRIPTIONID }}
           client-secret: ${{ secrets.AZUREAPPSERVICE_CLIENTSECRET }}
+          auth-type: 'SERVICE_PRINCIPAL'  # Explicitly specify Service Principal auth
 
       # Deploy to Azure Web App
       - name: Deploy to Azure Web App
