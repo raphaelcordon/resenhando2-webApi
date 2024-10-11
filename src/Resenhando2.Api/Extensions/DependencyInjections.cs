@@ -20,10 +20,10 @@ public static class DependencyInjections
             options.UseSqlServer(connectionString));
         
         // Spotify
-        var spotifyClientId = Environment.GetEnvironmentVariable("spotifyClientId") ??
+        var spotifyClientId = Environment.GetEnvironmentVariable("SPOTIFY_CLIENT_ID") ??
                               configuration["Spotify:clientId"];
 
-        var spotifyClientSecret = Environment.GetEnvironmentVariable("spotifyClientSecret") ??
+        var spotifyClientSecret = Environment.GetEnvironmentVariable("SPOTIFY_CLIENT_SECRET") ??
                                   configuration["Spotify:clientSecret"];
         
         services.AddScoped(_ => new SpotifyAuthConfig(spotifyClientId, spotifyClientSecret));
