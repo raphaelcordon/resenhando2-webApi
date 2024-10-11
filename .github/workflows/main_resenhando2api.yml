@@ -6,10 +6,9 @@ on:
       - main
   workflow_dispatch:
 
-# Set permissions required for OIDC
 permissions:
-  contents: read
   id-token: write
+  contents: read
 
 jobs:
   build:
@@ -45,7 +44,7 @@ jobs:
         with:
           name: .net-app
 
-      # Login to Azure using OIDC (no client-secret required)
+      # Login to Azure using OIDC (federated credentials)
       - name: Login to Azure
         uses: azure/login@v2
         with:
