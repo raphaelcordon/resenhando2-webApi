@@ -40,7 +40,7 @@ jobs:
         with:
           name: .net-app
 
-      # Login to Azure using Service Principal
+      # Login to Azure using Service Principal credentials
       - name: Login to Azure
         uses: azure/login@v2
         with:
@@ -54,5 +54,5 @@ jobs:
         id: deploy-to-webapp
         uses: azure/webapps-deploy@v3
         with:
-          app-name: 'resenhando2api'   # Replace with your actual Azure Web App name
+          app-name: 'resenhando2api'
           package: .
