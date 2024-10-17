@@ -8,7 +8,7 @@ namespace Resenhando2.Api.Controllers.SpotifyController;
 public class SpotifyArtistsController(SpotifyArtistsService spotify) : ControllerBase
 {
     [HttpGet("GetArtistById/{id}")]
-    public async Task<IActionResult> GetArtistById(string id = "0d5ZwMtCer8dQdOPAgWhe7")
+    public async Task<IActionResult> GetArtistById(string id) // for testing  = "0d5ZwMtCer8dQdOPAgWhe7"
     {
         var result = await spotify.GetArtistByIdAsync(id);
         return Ok(result);

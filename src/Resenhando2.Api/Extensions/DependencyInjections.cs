@@ -2,7 +2,6 @@ using Microsoft.EntityFrameworkCore;
 using Resenhando2.Api.Data;
 using Resenhando2.Api.Services.ReviewServices;
 using Resenhando2.Api.Services.SpotifyServices;
-using Resenhando2.Core.Entities.Review;
 using Resenhando2.Core.Entities.SpotifyEntities;
 
 namespace Resenhando2.Api.Extensions;

@@ -19,12 +19,8 @@ public class ReviewService(DataContext context)
             
             await context.Reviews.AddAsync(review);
             await context.SaveChangesAsync();
-            
-            var savedReview = await context.Reviews.AsNoTracking().FirstOrDefaultAsync(x => x.Id == review.Id);
 
-            return savedReview != null 
-                ? new ResultViewModel<Review>(savedReview) 
-                : new ResultViewModel<Review>("REV01 - Unable to retrieve saved review.");
+            return new ResultViewModel<Review>(review);
         }
         catch (Exception e)
         {
@@ -72,14 +68,10 @@ public class ReviewService(DataContext context)
                 return new ResultViewModel<Review>("Not found");
 
             review.UpdateReviewText(model.ReviewTitle, model.ReviewBody);
-            
             await context.SaveChangesAsync();
-
-            var updatedReview = await context.Reviews.AsNoTracking().FirstOrDefaultAsync(x => x.Id == model.Id);
             
-            return updatedReview != null
-                ? new ResultViewModel<Review>(updatedReview)
-                : new ResultViewModel<Review>("REV04 - Failed to update the review.");
+            return new ResultViewModel<Review>(review);
+            
         }
         catch (Exception e)
         {
