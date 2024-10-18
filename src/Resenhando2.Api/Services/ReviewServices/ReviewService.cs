@@ -1,103 +1,84 @@
-using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.EntityFrameworkCore;
 using Resenhando2.Api.Data;
-using Resenhando2.Api.ResultViewModels;
-using Resenhando2.Api.ResultViewModels.ReviewResultViews;
+using Resenhando2.Api.Extensions;
+using Resenhando2.Core.Dtos.ReviewDto;
 using Resenhando2.Core.Entities.Review;
 using Resenhando2.Core.ValueObjects.Review;
 
 namespace Resenhando2.Api.Services.ReviewServices;
 
-public class ReviewService(DataContext context)
+public class ReviewService(DataContext context, ValidateOwnerExtension validateOwner)
 {
-    public async Task<ResultViewModel<Review>> ReviewCreateAsync(ReviewCreateViewModel model)
+    public async Task<ReviewResponseDto> ReviewCreateAsync(ReviewCreateDto dto)
     {
-        try
-        {
-            var reviewText = ReviewText.Create(model.ReviewTitle, model.ReviewBody);
-            var review = Review.Create(model.ReviewType, model.SpotifyId, reviewText, model.UserId);
-            
-            await context.Reviews.AddAsync(review);
-            await context.SaveChangesAsync();
+        var reviewText = ReviewText.Create(dto.ReviewTitle, dto.ReviewBody);
+        var result = Review.Create(dto.ReviewType, dto.SpotifyId, reviewText, dto.UserId);
+        
+        await context.Reviews.AddAsync(result);
+        await context.SaveChangesAsync();
+        
+        var review = new ReviewResponseDto(result.Id, result.ReviewType, result.SpotifyId, result.ReviewText.ReviewTitle, result.ReviewText.ReviewBody, result.UserId);
 
-            return new ResultViewModel<Review>(review);
-        }
-        catch (Exception e)
-        {
-            Console.WriteLine($"Error creating review: {e.Message}");
-
-            return new ResultViewModel<Review>("REV01 - Server internal error");
-        }
+        return review;
     }
     
-    public async Task<ResultViewModel<Review>> ReviewGetOneAsync(Guid id)
+    public async Task<ReviewResponseDto> ReviewGetOneAsync(Guid id)
     {
-        try
-        {
-            var review = await context.Reviews.AsNoTracking().FirstOrDefaultAsync(x => x.Id == id);
-            return review != null ? new ResultViewModel<Review>(review) :
-                new ResultViewModel<Review>("Not found");
-        }
-        catch (Exception e)
-        {
-            Console.WriteLine($"Error fetching review: {e.Message}");
-            return new ResultViewModel<Review>("REV02 - Server internal error");
-        }
+        var result = await context.Reviews.AsNoTracking().FirstOrDefaultAsync(x => x.Id == id);
+        if (result == null)
+            throw new NotFoundException("REV - Review Not Found");
+        
+        var review = new ReviewResponseDto(result.Id, result.ReviewType, result.SpotifyId, result.ReviewText.ReviewTitle, result.ReviewText.ReviewBody, result.UserId); 
+        
+        return review;
     }
 
-    public async Task<ResultViewModel<List<Review>>> ReviewGetListAsync()
+    public async Task<List<ReviewResponseDto>> ReviewGetListAsync()
     {
-        try
-        {
-            var reviewList = await context.Reviews.AsNoTracking().ToListAsync();
-            return new ResultViewModel<List<Review>>(reviewList);
-        }
-        catch (Exception e)
-        {
-            Console.WriteLine($"Error fetching review list: {e.Message}");
-            return new ResultViewModel<List<Review>>("REV03 - Server internal error");
-        }
+        var result = await context.Reviews.AsNoTracking().ToListAsync();
+
+        var reviewList = result.Select(review => new ReviewResponseDto(
+            review.Id,
+            review.ReviewType,
+            review.SpotifyId,
+            review.ReviewText.ReviewTitle,
+            review.ReviewText.ReviewBody,
+            review.UserId
+        )).ToList();
+        return reviewList;
     }
 
-    public async Task<ResultViewModel<Review>> ReviewUpdate(ReviewUpdateViewModel model)
+    public async Task<ReviewResponseDto> ReviewUpdate(ReviewUpdateDto dto)
     {
-        try
-        {
-            var review = await context.Reviews.FirstOrDefaultAsync(x => x.Id == model.Id);
-            if (review == null)
-                return new ResultViewModel<Review>("Not found");
-
-            review.UpdateReviewText(model.ReviewTitle, model.ReviewBody);
-            await context.SaveChangesAsync();
-            
-            return new ResultViewModel<Review>(review);
-            
-        }
-        catch (Exception e)
-        {
-            Console.WriteLine($"Error updating review : {e.Message}");
-            return new ResultViewModel<Review>("REV04 - Server internal error");
-        }
+        var result = await context.Reviews.FirstOrDefaultAsync(x => x.Id == dto.Id);
+        if (result == null)
+            throw new NotFoundException("REV - Review Not Found");
+        
+        if (!validateOwner.IsOwner(result.UserId))
+            throw new UnauthorizedAccessException("Only the owner has the access to perform this action.");
+        
+        result.UpdateReviewText(dto.ReviewTitle, dto.ReviewBody);
+        await context.SaveChangesAsync();
+        
+        var review = new ReviewResponseDto(result.Id, result.ReviewType, result.SpotifyId, result.ReviewText.ReviewTitle, result.ReviewText.ReviewBody, result.UserId);
+        
+        return review;
     }
 
-    public async Task<ResultViewModel<Review>> ReviewDelete(Guid id)
+    public async Task<ReviewResponseDto> ReviewDelete(Guid id)
     {
-        try
-        {
-            var result = await context.Reviews.AsNoTracking().FirstOrDefaultAsync(x => x.Id == id);
-            if (result == null)
-                return new ResultViewModel<Review>("Not found");
+        var result = await context.Reviews.AsNoTracking().FirstOrDefaultAsync(x => x.Id == id);
+        if (result == null)
+            throw new NotFoundException("REV - Review Not Found");
+        
+        if (!validateOwner.IsOwner(result.UserId))
+            throw new UnauthorizedAccessException("Only the owner has the access to perform this action.");
 
-            context.Reviews.Remove(result);
-            await context.SaveChangesAsync();
+        context.Reviews.Remove(result);
+        await context.SaveChangesAsync();
 
-            return new ResultViewModel<Review>(result);
-
-        }
-        catch (Exception e)
-        {
-            Console.WriteLine($"Error fetching review list: {e.Message}");
-            return new ResultViewModel<Review>("REV05 - Server internal error");
-        }
+        var review = new ReviewResponseDto(result.Id, result.ReviewType, result.SpotifyId, result.ReviewText.ReviewTitle, result.ReviewText.ReviewBody, result.UserId);
+        
+        return review;
     }
 }
