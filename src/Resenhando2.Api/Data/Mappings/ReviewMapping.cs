@@ -39,11 +39,10 @@ public class ReviewMapping : IEntityTypeConfiguration<Review>
                     .HasColumnName("ReviewBody")
                     .HasColumnType("NVARCHAR(MAX)");
             });
-        
+
         builder.Property(x => x.UserId)
             .IsRequired()
             .HasColumnName("UserId")
-            .HasColumnType("NVARCHAR")
-            .HasMaxLength(30);
+            .HasColumnType("uniqueidentifier");
     }
 }

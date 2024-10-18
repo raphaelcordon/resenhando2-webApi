@@ -1,9 +1,10 @@
-using Microsoft.AspNetCore.Http.HttpResults;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Resenhando2.Api.ResultViewModels;
-using Resenhando2.Api.ResultViewModels.ReviewResultViews;
+using Resenhando2.Api.Extensions;
 using Resenhando2.Api.Services.ReviewServices;
+using Resenhando2.Core.Dtos.ReviewDto;
 using Resenhando2.Core.Entities.Review;
+using Resenhando2.Core.ViewModels;
 
 namespace Resenhando2.Api.Controllers.ReviewController;
 
@@ -12,39 +13,75 @@ namespace Resenhando2.Api.Controllers.ReviewController;
 public class ReviewController(ReviewService service) : ControllerBase
 {
     [HttpPost("CreateReview")]
-    public async Task<IActionResult> CreateReview([FromBody] ReviewCreateViewModel model)
+    [Authorize]
+    public async Task<IActionResult> CreateReview([FromBody] ReviewCreateDto dto)
     {
-        var result = await service.ReviewCreateAsync(model);
-        return result.Errors.Any() ? StatusCode(500, result) : Ok(result);
+        try
+        {
+            var result = await service.ReviewCreateAsync(dto);
+            return Ok(new ResultViewModel<ReviewResponseDto>(result));
+        }
+        catch (HttpStatusException ex)
+        {
+            return StatusCode(ex.StatusCode, new ResultViewModel<object>(ex.Message));
+        }
     }
-
+    
     [HttpGet("GetOneReviewById/{id:guid}")]
     public async Task<IActionResult> GetOneReview(Guid id)
     {
+        try
+        {
             var result = await service.ReviewGetOneAsync(id);
-
-            if (!result.Errors.Any()) return Ok(result);
-            return result.Errors.Contains("Not found") ? NotFound(result) : StatusCode(500, result);
+            return Ok(new ResultViewModel<ReviewResponseDto>(result));
+        }
+        catch (HttpStatusException ex)
+        {
+            return StatusCode(ex.StatusCode, new ResultViewModel<object>(ex.Message));
+        }
     }
     
     [HttpGet("GetListReview")]
     public async Task<IActionResult> GetListReview()
     {
-        var result = await service.ReviewGetListAsync();
-        return !result.Errors.Any() ? Ok(result) : StatusCode(500, result);
+        try
+        {
+            var result = await service.ReviewGetListAsync();
+            return Ok(new ResultViewModel<List<ReviewResponseDto>>(result));
+        }
+        catch (HttpStatusException ex)
+        {
+            return StatusCode(ex.StatusCode, new ResultViewModel<object>(ex.Message));
+        }
     }
 
     [HttpPut("UpdateReviewById")]
-    public async Task<IActionResult> UpdateReviewById([FromBody] ReviewUpdateViewModel model)
+    [Authorize]
+    public async Task<IActionResult> UpdateReviewById([FromBody] ReviewUpdateDto dto)
     {
-        var result = await service.ReviewUpdate(model);
-        return !result.Errors.Any() ? Ok(result) : StatusCode(500, result);
+        try
+        {
+            var result = await service.ReviewUpdate(dto);
+            return Ok(new ResultViewModel<ReviewResponseDto>(result));
+        }
+        catch (HttpStatusException ex)
+        {
+            return StatusCode(ex.StatusCode, new ResultViewModel<object>(ex.Message));
+        }
     }
 
     [HttpDelete("DeleteReviewById/{id:guid}")]
+    [Authorize]
     public async Task<IActionResult> DeleteReviewById(Guid id)
     {
-        var result = await service.ReviewDelete(id);
-        return !result.Errors.Any() ? Ok(result) : StatusCode(500, result);
+        try
+        {
+            var result = await service.ReviewDelete(id);
+            return Ok(new ResultViewModel<ReviewResponseDto>(result));
+        }
+        catch (HttpStatusException ex)
+        {
+            return StatusCode(ex.StatusCode, new ResultViewModel<object>(ex.Message));
+        }
     }
 }

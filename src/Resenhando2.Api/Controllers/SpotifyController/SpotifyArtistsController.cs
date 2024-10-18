@@ -1,5 +1,8 @@
 using Microsoft.AspNetCore.Mvc;
+using Resenhando2.Api.Extensions;
 using Resenhando2.Api.Services.SpotifyServices;
+using Resenhando2.Core.Entities.SpotifyEntities;
+using Resenhando2.Core.ViewModels;
 
 namespace Resenhando2.Api.Controllers.SpotifyController;
 
@@ -8,16 +11,30 @@ namespace Resenhando2.Api.Controllers.SpotifyController;
 public class SpotifyArtistsController(SpotifyArtistsService spotify) : ControllerBase
 {
     [HttpGet("GetArtistById/{id}")]
-    public async Task<IActionResult> GetArtistById(string id) // for testing  = "0d5ZwMtCer8dQdOPAgWhe7"
+    public async Task<IActionResult> GetArtistById(string id)
     {
-        var result = await spotify.GetArtistByIdAsync(id);
-        return Ok(result);
+        try
+        {
+            var result = await spotify.GetArtistByIdAsync(id);
+            return Ok(new ResultViewModel<SpotifyArtist>(result));
+        }
+        catch (HttpStatusException ex)
+        {
+            return StatusCode(ex.StatusCode, new ResultViewModel<object>(ex.Message));
+        }
     }
 
     [HttpGet("GetSearchByArtists/{searchItem}")]
     public async Task<IActionResult> GetSearchByArtists([FromRoute]string searchItem, [FromQuery]int limit = 5)
     {
-        var result = await spotify.GetSearchArtistsAsync(searchItem, limit);
-        return Ok(result);
+        try
+        {
+            var result = await spotify.GetSearchArtistsAsync(searchItem, limit);
+            return Ok(new ResultViewModel<List<SpotifyArtist>>(result));
+        }
+        catch (HttpStatusException ex)
+        {
+            return StatusCode(ex.StatusCode, new ResultViewModel<object>(ex.Message));
+        }
     }
 }
