@@ -8,7 +8,7 @@ namespace Resenhando2.Api.Services.UserServices;
 
 public class UserService(UserManager<User> userManager, ValidateOwnerExtension validateOwner)
 {
-    public async Task<IdentityResult> CreateUserAsync(UserCreateDto dto)
+    public async Task<IdentityResult> UserCreateAsync(UserCreateDto dto)
     {
         var user = new User
         {
@@ -24,6 +24,21 @@ public class UserService(UserManager<User> userManager, ValidateOwnerExtension v
         return result;
     }
 
+    public async Task<UserResponseDto> UserGetFromClaimAsync()
+    {
+        var claimId = Guid.Parse(validateOwner.GetIdFromClaims());
+        var result = await userManager.Users.AsNoTracking().FirstOrDefaultAsync(x => x.Id == claimId);
+        if (result == null)
+            throw new NotFoundException("USE - User Not Found");
+        
+        var user = new UserResponseDto(
+            result.Id,
+            result.Email,
+            result.FirstName,
+            result.LastName
+        );
+        return user;
+    }
     public async Task<UserResponseDto> UserGetByIdAsync(Guid id)
     {
         var result = await userManager.Users.AsNoTracking().FirstOrDefaultAsync(x => x.Id == id);

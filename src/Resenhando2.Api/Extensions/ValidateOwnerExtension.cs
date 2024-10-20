@@ -8,4 +8,9 @@ public class ValidateOwnerExtension(IHttpContextAccessor httpContext)
     {
         return Guid.Parse(httpContext.HttpContext.User.FindFirstValue("id")).Equals(id);
     }
+
+    public string GetIdFromClaims()
+    {
+        return httpContext.HttpContext.User.FindFirstValue("id");
+    }
 }
