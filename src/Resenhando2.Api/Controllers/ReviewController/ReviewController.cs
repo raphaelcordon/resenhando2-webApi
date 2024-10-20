@@ -1,87 +1,49 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Resenhando2.Api.Extensions;
 using Resenhando2.Api.Services.ReviewServices;
 using Resenhando2.Core.Dtos.ReviewDto;
-using Resenhando2.Core.Entities.Review;
-using Resenhando2.Core.ViewModels;
 
 namespace Resenhando2.Api.Controllers.ReviewController;
 
 [ApiController]
-[Route("/api/[controller]/")]
-public class ReviewController(ReviewService service) : ControllerBase
+[Authorize]
+[Route("/api/review/")]
+public class ReviewController(ReviewService reviewService) : ControllerBase
 {
-    [HttpPost("CreateReview")]
-    [Authorize]
-    public async Task<IActionResult> CreateReview([FromBody] ReviewCreateDto dto)
+    [HttpPost("")]
+    public async Task<IActionResult> Create([FromBody] ReviewCreateDto dto)
     {
-        try
-        {
-            var result = await service.ReviewCreateAsync(dto);
-            return Ok(new ResultViewModel<ReviewResponseDto>(result));
-        }
-        catch (HttpStatusException ex)
-        {
-            return StatusCode(ex.StatusCode, new ResultViewModel<object>(ex.Message));
-        }
+        var result = await reviewService.CreateAsync(dto);
+        return Ok(result);
     }
     
-    [HttpGet("GetOneReviewById/{id:guid}")]
-    public async Task<IActionResult> GetOneReview(Guid id)
+    [HttpGet("{id:guid}")]
+    [AllowAnonymous]
+    public async Task<IActionResult> GetById(Guid id)
     {
-        try
-        {
-            var result = await service.ReviewGetOneAsync(id);
-            return Ok(new ResultViewModel<ReviewResponseDto>(result));
-        }
-        catch (HttpStatusException ex)
-        {
-            return StatusCode(ex.StatusCode, new ResultViewModel<object>(ex.Message));
-        }
+        var result = await reviewService.GetByIdAsync(id);
+        return Ok(result);
     }
     
-    [HttpGet("GetListReview")]
-    public async Task<IActionResult> GetListReview()
+    [HttpGet("")]
+    [AllowAnonymous]
+    public async Task<IActionResult> GetList()
     {
-        try
-        {
-            var result = await service.ReviewGetListAsync();
-            return Ok(new ResultViewModel<List<ReviewResponseDto>>(result));
-        }
-        catch (HttpStatusException ex)
-        {
-            return StatusCode(ex.StatusCode, new ResultViewModel<object>(ex.Message));
-        }
+        var result = await reviewService.GetListAsync();
+        return Ok(result);
     }
 
-    [HttpPut("UpdateReviewById")]
-    [Authorize]
-    public async Task<IActionResult> UpdateReviewById([FromBody] ReviewUpdateDto dto)
+    [HttpPut("")]
+    public async Task<IActionResult> UpdateById([FromBody] ReviewUpdateDto dto)
     {
-        try
-        {
-            var result = await service.ReviewUpdate(dto);
-            return Ok(new ResultViewModel<ReviewResponseDto>(result));
-        }
-        catch (HttpStatusException ex)
-        {
-            return StatusCode(ex.StatusCode, new ResultViewModel<object>(ex.Message));
-        }
+        var result = await reviewService.Update(dto);
+        return Ok(result);
     }
 
-    [HttpDelete("DeleteReviewById/{id:guid}")]
-    [Authorize]
+    [HttpDelete("{id:guid}")]
     public async Task<IActionResult> DeleteReviewById(Guid id)
     {
-        try
-        {
-            var result = await service.ReviewDelete(id);
-            return Ok(new ResultViewModel<ReviewResponseDto>(result));
-        }
-        catch (HttpStatusException ex)
-        {
-            return StatusCode(ex.StatusCode, new ResultViewModel<object>(ex.Message));
-        }
+        var result = await reviewService.Delete(id);
+        return Ok(result);
     }
 }

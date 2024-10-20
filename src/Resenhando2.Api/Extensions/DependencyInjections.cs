@@ -49,7 +49,7 @@ public static class DependencyInjections
                 options.TokenValidationParameters = new TokenValidationParameters
                 {
                     ValidateIssuerSigningKey = true,
-                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(tokenKey)),
+                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(tokenKey!)),
                     ValidateAudience = false,
                     ValidateIssuer = false,
                     ClockSkew = TimeSpan.Zero
@@ -76,6 +76,7 @@ public static class DependencyInjections
         services.AddScoped<UserService>();
         services.AddScoped<ReviewService>();
         services.AddScoped<ValidateOwnerExtension>();
+        services.AddTransient<ExceptionHandlingMiddleware>();
         
         return services;
     }

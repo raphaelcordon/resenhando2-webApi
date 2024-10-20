@@ -6,11 +6,11 @@ public class ValidateOwnerExtension(IHttpContextAccessor httpContext)
 {
     public bool IsOwner(Guid id)
     {
-        return Guid.Parse(httpContext.HttpContext.User.FindFirstValue("id")).Equals(id);
+        return Guid.Parse(httpContext.HttpContext!.User.FindFirstValue("id")!).Equals(id);
     }
 
     public string GetIdFromClaims()
     {
-        return httpContext.HttpContext.User.FindFirstValue("id");
+        return httpContext.HttpContext!.User.FindFirstValue("id")!;
     }
 }
