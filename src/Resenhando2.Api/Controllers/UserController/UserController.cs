@@ -11,12 +11,12 @@ namespace Resenhando2.Api.Controllers.UserController;
 [Route("api/[controller]")]
 public class UserController(UserService userService) : ControllerBase
 {
-    [HttpPost("RegisterNewUser")]
-    public async Task<IActionResult> RegisterNewUser(UserCreateDto dto)
+    [HttpPost("UserCreateNew")]
+    public async Task<IActionResult> UserCreateNew(UserCreateDto dto)
     {
         try
         {
-            var result = await userService.CreateUserAsync(dto);
+            var result = await userService.UserCreateAsync(dto);
             return Ok(result);
         }
         catch (HttpStatusException ex)
@@ -25,8 +25,22 @@ public class UserController(UserService userService) : ControllerBase
         }
     }
     
-    [HttpGet("GetUserById/{id:guid}")]
-    public async Task<IActionResult> GetUserById(Guid id)
+    [HttpGet("UserGetFromClaim/")]
+    public async Task<IActionResult> UserGetFromClaim()
+    {
+        try
+        {
+            var result = await userService.UserGetFromClaimAsync();
+            return Ok(new ResultViewModel<UserResponseDto>(result));
+        }
+        catch (HttpStatusException ex)
+        {
+            return StatusCode(ex.StatusCode, new ResultViewModel<object>(ex.Message));
+        }
+    }
+    
+    [HttpGet("UserGetById/{id:guid}")]
+    public async Task<IActionResult> UserGetById(Guid id)
     {
         try
         {
@@ -39,8 +53,8 @@ public class UserController(UserService userService) : ControllerBase
         }
     }
     
-    [HttpGet("GetUserList")]
-    public async Task<IActionResult> GetUserList()
+    [HttpGet("UserGetList")]
+    public async Task<IActionResult> UserGetList()
     {
         try
         {
@@ -53,9 +67,9 @@ public class UserController(UserService userService) : ControllerBase
         }
     }
     
-    [HttpPut("UpdateUser")]
+    [HttpPut("UserUpdate")]
     [Authorize]
-    public async Task<IActionResult> UpdateUser([FromBody] UserUpdateDto dto)
+    public async Task<IActionResult> UserUpdate([FromBody] UserUpdateDto dto)
     {
         try
         {
@@ -68,9 +82,9 @@ public class UserController(UserService userService) : ControllerBase
         }
     }
     
-    [HttpDelete("DeleteUser/{id:guid}")]
+    [HttpDelete("UserDelete/{id:guid}")]
     [Authorize]
-    public async Task<IActionResult> DeleteUser(Guid id)
+    public async Task<IActionResult> UserDelete(Guid id)
     {
         try
         {
