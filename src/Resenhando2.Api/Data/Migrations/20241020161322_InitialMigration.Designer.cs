@@ -12,8 +12,8 @@ using Resenhando2.Api.Data;
 namespace Resenhando2.Api.Data.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20241018142156_InitialCreate")]
-    partial class InitialCreate
+    [Migration("20241020161322_InitialMigration")]
+    partial class InitialMigration
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)

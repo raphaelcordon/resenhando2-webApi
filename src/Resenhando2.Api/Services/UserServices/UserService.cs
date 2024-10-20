@@ -8,7 +8,7 @@ namespace Resenhando2.Api.Services.UserServices;
 
 public class UserService(UserManager<User> userManager, ValidateOwnerExtension validateOwner)
 {
-    public async Task<IdentityResult> UserCreateAsync(UserCreateDto dto)
+    public async Task<IdentityResult> CreateAsync(UserCreateDto dto)
     {
         var user = new User
         {
@@ -24,55 +24,39 @@ public class UserService(UserManager<User> userManager, ValidateOwnerExtension v
         return result;
     }
 
-    public async Task<UserResponseDto> UserGetFromClaimAsync()
+    public async Task<UserResponseDto> GetFromClaimAsync()
     {
         var claimId = Guid.Parse(validateOwner.GetIdFromClaims());
         var result = await userManager.Users.AsNoTracking().FirstOrDefaultAsync(x => x.Id == claimId);
         if (result == null)
-            throw new NotFoundException("USE - User Not Found");
+            throw new KeyNotFoundException("USE - User Not Found");
         
-        var user = new UserResponseDto(
-            result.Id,
-            result.Email,
-            result.FirstName,
-            result.LastName
-        );
+        var user = new UserResponseDto(result);
         return user;
     }
-    public async Task<UserResponseDto> UserGetByIdAsync(Guid id)
+    public async Task<UserResponseDto> GetByIdAsync(Guid id)
     {
         var result = await userManager.Users.AsNoTracking().FirstOrDefaultAsync(x => x.Id == id);
         if (result == null)
-            throw new NotFoundException("USE - User Not Found");
+            throw new KeyNotFoundException("USE - User Not Found");
         
-        var user = new UserResponseDto(
-            result.Id,
-            result.Email,
-            result.FirstName,
-            result.LastName
-        );
+        var user = new UserResponseDto(result);
         return user;
     }
     
-    public async Task<List<UserResponseDto>> UserGetListAsync()
+    public async Task<List<UserResponseDto>> GetListAsync()
     {
         var result = await userManager.Users.AsNoTracking().ToListAsync();
-
-        var userList = result.Select(user => new UserResponseDto(
-            user.Id,
-            user.Email,
-            user.FirstName,
-            user.LastName
-        )).ToList();
+        var userList = result.Select(user => new UserResponseDto(user)).ToList();
         
         return userList;
     }
     
-    public async Task<UserResponseDto> UserUpdate(UserUpdateDto dto)
+    public async Task<UserResponseDto> Update(UserUpdateDto dto)
     {
         var result = await userManager.Users.FirstOrDefaultAsync(x => x.Id == dto.Id);
         if (result == null)
-            throw new NotFoundException("USE - User Not Found");
+            throw new KeyNotFoundException("USE - User Not Found");
         
         if (!validateOwner.IsOwner(result.Id))
             throw new UnauthorizedAccessException("Only the owner has the access to perform this action.");
@@ -82,20 +66,20 @@ public class UserService(UserManager<User> userManager, ValidateOwnerExtension v
         result.LastName = dto.LastName;
         await userManager.UpdateAsync(result);
         
-        return new UserResponseDto(result.Id, result.Email, result.FirstName, result.LastName);
+        return new UserResponseDto(result);
     }
 
-    public async Task<UserResponseDto> UserDelete(Guid id)
+    public async Task<UserResponseDto> Delete(Guid id)
     {
         var result = await userManager.Users.AsNoTracking().FirstOrDefaultAsync(x => x.Id == id);
         if (result == null)
-            throw new NotFoundException("USE - User Not Found");
+            throw new KeyNotFoundException("USE - User Not Found");
         
         if (!validateOwner.IsOwner(result.Id))
             throw new UnauthorizedAccessException("Only the owner has the access to perform this action.");
         
         await userManager.DeleteAsync(result);
 
-        return new UserResponseDto(result.Id, result.Email, result.FirstName, result.LastName);
+        return new UserResponseDto(result);
     }
 }

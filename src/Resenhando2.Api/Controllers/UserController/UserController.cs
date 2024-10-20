@@ -1,99 +1,58 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Resenhando2.Api.Extensions;
 using Resenhando2.Api.Services.UserServices;
 using Resenhando2.Core.Dtos.UserDto;
-using Resenhando2.Core.ViewModels;
 
 namespace Resenhando2.Api.Controllers.UserController;
 
 [ApiController]
-[Route("api/[controller]")]
+[Route("api/user")]
+[Authorize]
 public class UserController(UserService userService) : ControllerBase
 {
-    [HttpPost("UserCreateNew")]
-    public async Task<IActionResult> UserCreateNew(UserCreateDto dto)
+    [AllowAnonymous]
+    [HttpPost("")]
+    public async Task<IActionResult> Create(UserCreateDto dto)
     {
-        try
-        {
-            var result = await userService.UserCreateAsync(dto);
-            return Ok(result);
-        }
-        catch (HttpStatusException ex)
-        {
-            return StatusCode(ex.StatusCode, new ResultViewModel<object>(ex.Message));
-        }
+        var result = await userService.CreateAsync(dto);
+        return Ok(result);
     }
     
-    [HttpGet("UserGetFromClaim/")]
-    public async Task<IActionResult> UserGetFromClaim()
+    [AllowAnonymous]
+    [HttpGet("GetFromClaim/")]
+    public async Task<IActionResult> GetFromClaim()
     {
-        try
-        {
-            var result = await userService.UserGetFromClaimAsync();
-            return Ok(new ResultViewModel<UserResponseDto>(result));
-        }
-        catch (HttpStatusException ex)
-        {
-            return StatusCode(ex.StatusCode, new ResultViewModel<object>(ex.Message));
-        }
+        var result = await userService.GetFromClaimAsync();
+        return Ok(result);
     }
     
-    [HttpGet("UserGetById/{id:guid}")]
-    public async Task<IActionResult> UserGetById(Guid id)
+    [AllowAnonymous]
+    [HttpGet("{id:guid}")]
+    public async Task<IActionResult> GetById(Guid id)
     {
-        try
-        {
-            var result = await userService.UserGetByIdAsync(id);
-            return Ok(new ResultViewModel<UserResponseDto>(result));
-        }
-        catch (HttpStatusException ex)
-        {
-            return StatusCode(ex.StatusCode, new ResultViewModel<object>(ex.Message));
-        }
+        var result = await userService.GetByIdAsync(id);
+        return Ok(result);
     }
     
-    [HttpGet("UserGetList")]
-    public async Task<IActionResult> UserGetList()
+    [AllowAnonymous]
+    [HttpGet("")]
+    public async Task<IActionResult> GetList()
     {
-        try
-        {
-            var result = await userService.UserGetListAsync();
-            return Ok(new ResultViewModel<List<UserResponseDto>>(result));
-        }
-        catch (HttpStatusException ex)
-        {
-            return StatusCode(ex.StatusCode, new ResultViewModel<object>(ex.Message));
-        }
+        var result = await userService.GetListAsync();
+        return Ok(result);
     }
     
-    [HttpPut("UserUpdate")]
-    [Authorize]
-    public async Task<IActionResult> UserUpdate([FromBody] UserUpdateDto dto)
+    [HttpPut("")]
+    public async Task<IActionResult> Update([FromBody] UserUpdateDto dto)
     {
-        try
-        {
-            var result = await userService.UserUpdate(dto);
-            return Ok(new ResultViewModel<UserResponseDto>(result));
-        }
-        catch (HttpStatusException ex)
-        {
-            return StatusCode(ex.StatusCode, new ResultViewModel<object>(ex.Message));
-        }
+        var result = await userService.Update(dto);
+        return Ok(result);
     }
     
-    [HttpDelete("UserDelete/{id:guid}")]
-    [Authorize]
-    public async Task<IActionResult> UserDelete(Guid id)
+    [HttpDelete("{id:guid}")]
+    public async Task<IActionResult> Delete(Guid id)
     {
-        try
-        {
-            var result = await userService.UserDelete(id);
-            return Ok(new ResultViewModel<UserResponseDto>(result));
-        }
-        catch (HttpStatusException ex)
-        {
-            return StatusCode(ex.StatusCode, new ResultViewModel<object>(ex.Message));
-        }
+        var result = await userService.Delete(id);
+        return Ok(result);
     }
 }
