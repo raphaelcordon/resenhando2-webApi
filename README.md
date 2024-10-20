@@ -68,3 +68,8 @@
 | V2 | WebAPI | [Web API](https://github.com/raphaelcordon/resenhando2-webApi) |
 | V2 | Web Page | [Web Page](https://github.com/raphaelcordon/resenhando2-webPage) |
 | V2 | DB | TBD |
+
+### Resenhando V1
+#### This is how Resenhando V1 was at 20/10/2024.
+![Resenhando v1-1](./readmeImages/resenhandov1-1.png)
+![Resenhando v1-2](./readmeImages/resenhandov1-2.png)
