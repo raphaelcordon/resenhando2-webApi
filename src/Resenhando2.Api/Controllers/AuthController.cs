@@ -1,11 +1,11 @@
 using Microsoft.AspNetCore.Mvc;
-using Resenhando2.Api.Services.UserServices;
+using Resenhando2.Api.Services;
 using Resenhando2.Core.Dtos.UserDto;
 
-namespace Resenhando2.Api.Controllers.UserController;
+namespace Resenhando2.Api.Controllers;
 
 [ApiController]
-[Route("api/auth")]
+[Route("api/v1/auth")]
 public class AuthController(AuthService authService) : ControllerBase
 {
     [HttpPost("Login")]

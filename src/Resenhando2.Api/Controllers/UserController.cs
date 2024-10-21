@@ -1,12 +1,12 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Resenhando2.Api.Services.UserServices;
+using Resenhando2.Api.Services;
 using Resenhando2.Core.Dtos.UserDto;
 
-namespace Resenhando2.Api.Controllers.UserController;
+namespace Resenhando2.Api.Controllers;
 
 [ApiController]
-[Route("api/user")]
+[Route("api/v1/user")]
 [Authorize]
 public class UserController(UserService userService) : ControllerBase
 {
@@ -19,7 +19,7 @@ public class UserController(UserService userService) : ControllerBase
     }
     
     [AllowAnonymous]
-    [HttpGet("GetFromClaim/")]
+    [HttpGet("fromclaim/")]
     public async Task<IActionResult> GetFromClaim()
     {
         var result = await userService.GetFromClaimAsync();

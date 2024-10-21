@@ -1,13 +1,13 @@
 using Resenhando2.Core.Entities.SpotifyEntities;
 using SpotifyAPI.Web;
 
-namespace Resenhando2.Api.Services.SpotifyServices;
+namespace Resenhando2.Api.Services;
 
-public class SpotifyArtistsService
+public class SpotifyService
 {
     private readonly SpotifyClient _spotifyClient;
     
-    public SpotifyArtistsService(SpotifyAuthConfig spotifyAuthConfig)
+    public SpotifyService(SpotifyAuthConfig spotifyAuthConfig)
     {
         var spotifyClientConfig = SpotifyClientConfig.CreateDefault();
         var spotifyRequestToken = new ClientCredentialsRequest(spotifyAuthConfig.ClientId!, spotifyAuthConfig.ClientSecret!);
@@ -16,13 +16,13 @@ public class SpotifyArtistsService
         _spotifyClient = new SpotifyClient(spotifyClientConfig.WithToken(spotifyOAuthResponse.Result.AccessToken));
     }
     
-    public async Task<SpotifyArtist> GetByIdAsync(string id)
+    public async Task<SpotifyArtist> GetArtistByIdAsync(string id)
     {
         var result = await _spotifyClient.Artists.Get(id);
         return result.ToArtist();
     }
 
-    public async Task<List<SpotifyArtist>> SearchArtistsAsync(string searchItem, int limit)
+    public async Task<List<SpotifyArtist>> SearchArtistsByNameAsync(string searchItem, int limit)
     {
         var formattedSearchItem = $"artist:{searchItem}";
         var searchRequest = new SearchRequest(SearchRequest.Types.Artist, formattedSearchItem)

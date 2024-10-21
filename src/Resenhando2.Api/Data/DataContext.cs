@@ -2,8 +2,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Resenhando2.Api.Data.Mappings;
-using Resenhando2.Core.Entities.Identity;
-using Resenhando2.Core.Entities.Review;
+using Resenhando2.Core.Entities;
 
 namespace Resenhando2.Api.Data;
 

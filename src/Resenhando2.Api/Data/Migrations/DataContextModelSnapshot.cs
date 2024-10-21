@@ -153,7 +153,50 @@ namespace Resenhando2.Api.Data.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
-            modelBuilder.Entity("Resenhando2.Core.Entities.Identity.User", b =>
+            modelBuilder.Entity("Resenhando2.Core.Entities.Review", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("ReviewBody")
+                        .IsRequired()
+                        .HasColumnType("NVARCHAR(MAX)")
+                        .HasColumnName("ReviewBody");
+
+                    b.Property<string>("ReviewTitle")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("VARCHAR")
+                        .HasColumnName("ReviewTitle");
+
+                    b.Property<string>("ReviewType")
+                        .IsRequired()
+                        .HasMaxLength(30)
+                        .HasColumnType("NVARCHAR")
+                        .HasColumnName("ReviewType");
+
+                    b.Property<string>("SpotifyId")
+                        .IsRequired()
+                        .HasMaxLength(30)
+                        .HasColumnType("NVARCHAR")
+                        .HasColumnName("SpotifyId");
+
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uniqueidentifier")
+                        .HasColumnName("UserId");
+
+                    b.Property<string>("YouTubeId")
+                        .HasMaxLength(30)
+                        .HasColumnType("NVARCHAR")
+                        .HasColumnName("YouTubeId");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Review", (string)null);
+                });
+
+            modelBuilder.Entity("Resenhando2.Core.Entities.User", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -229,33 +272,6 @@ namespace Resenhando2.Api.Data.Migrations
                     b.ToTable("AspNetUsers", (string)null);
                 });
 
-            modelBuilder.Entity("Resenhando2.Core.Entities.Review.Review", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("ReviewType")
-                        .IsRequired()
-                        .HasMaxLength(30)
-                        .HasColumnType("NVARCHAR")
-                        .HasColumnName("ReviewType");
-
-                    b.Property<string>("SpotifyId")
-                        .IsRequired()
-                        .HasMaxLength(30)
-                        .HasColumnType("NVARCHAR")
-                        .HasColumnName("SpotifyId");
-
-                    b.Property<Guid>("UserId")
-                        .HasColumnType("uniqueidentifier")
-                        .HasColumnName("UserId");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Review", (string)null);
-                });
-
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<System.Guid>", b =>
                 {
                     b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole<System.Guid>", null)
@@ -267,7 +283,7 @@ namespace Resenhando2.Api.Data.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<System.Guid>", b =>
                 {
-                    b.HasOne("Resenhando2.Core.Entities.Identity.User", null)
+                    b.HasOne("Resenhando2.Core.Entities.User", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -276,7 +292,7 @@ namespace Resenhando2.Api.Data.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<System.Guid>", b =>
                 {
-                    b.HasOne("Resenhando2.Core.Entities.Identity.User", null)
+                    b.HasOne("Resenhando2.Core.Entities.User", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -291,7 +307,7 @@ namespace Resenhando2.Api.Data.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Resenhando2.Core.Entities.Identity.User", null)
+                    b.HasOne("Resenhando2.Core.Entities.User", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -300,41 +316,10 @@ namespace Resenhando2.Api.Data.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<System.Guid>", b =>
                 {
-                    b.HasOne("Resenhando2.Core.Entities.Identity.User", null)
+                    b.HasOne("Resenhando2.Core.Entities.User", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
-            modelBuilder.Entity("Resenhando2.Core.Entities.Review.Review", b =>
-                {
-                    b.OwnsOne("Resenhando2.Core.ValueObjects.Review.ReviewText", "ReviewText", b1 =>
-                        {
-                            b1.Property<Guid>("ReviewId")
-                                .HasColumnType("uniqueidentifier");
-
-                            b1.Property<string>("ReviewBody")
-                                .IsRequired()
-                                .HasMaxLength(10000)
-                                .HasColumnType("NVARCHAR(MAX)")
-                                .HasColumnName("ReviewBody");
-
-                            b1.Property<string>("ReviewTitle")
-                                .IsRequired()
-                                .HasMaxLength(50)
-                                .HasColumnType("VARCHAR")
-                                .HasColumnName("ReviewText");
-
-                            b1.HasKey("ReviewId");
-
-                            b1.ToTable("Review");
-
-                            b1.WithOwner()
-                                .HasForeignKey("ReviewId");
-                        });
-
-                    b.Navigation("ReviewText")
                         .IsRequired();
                 });
 #pragma warning restore 612, 618

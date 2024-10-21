@@ -4,10 +4,8 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Resenhando2.Api.Data;
-using Resenhando2.Api.Services.ReviewServices;
-using Resenhando2.Api.Services.SpotifyServices;
-using Resenhando2.Api.Services.UserServices;
-using Resenhando2.Core.Entities.Identity;
+using Resenhando2.Api.Services;
+using Resenhando2.Core.Entities;
 using Resenhando2.Core.Entities.SpotifyEntities;
 
 namespace Resenhando2.Api.Extensions;
@@ -64,7 +62,7 @@ public static class DependencyInjections
                                   configuration["Spotify:clientSecret"];
         
         services.AddScoped(_ => new SpotifyAuthConfig(spotifyClientId, spotifyClientSecret));
-        services.AddScoped<SpotifyArtistsService>();
+        services.AddScoped<SpotifyService>();
         
         // Services
         // services.AddAuthorization(options =>
@@ -75,7 +73,7 @@ public static class DependencyInjections
         services.AddScoped<JwtTokenServiceExtension>();
         services.AddScoped<UserService>();
         services.AddScoped<ReviewService>();
-        services.AddScoped<ValidateOwnerExtension>();
+        services.AddScoped<GetClaimExtension>();
         services.AddTransient<ExceptionHandlingMiddleware>();
         
         return services;

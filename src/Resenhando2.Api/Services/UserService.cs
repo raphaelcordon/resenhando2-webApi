@@ -2,11 +2,11 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Resenhando2.Api.Extensions;
 using Resenhando2.Core.Dtos.UserDto;
-using Resenhando2.Core.Entities.Identity;
+using Resenhando2.Core.Entities;
 
-namespace Resenhando2.Api.Services.UserServices;
+namespace Resenhando2.Api.Services;
 
-public class UserService(UserManager<User> userManager, ValidateOwnerExtension validateOwner)
+public class UserService(UserManager<User> userManager, GetClaimExtension getClaim)
 {
     public async Task<IdentityResult> CreateAsync(UserCreateDto dto)
     {
@@ -26,7 +26,7 @@ public class UserService(UserManager<User> userManager, ValidateOwnerExtension v
 
     public async Task<UserResponseDto> GetFromClaimAsync()
     {
-        var claimId = Guid.Parse(validateOwner.GetIdFromClaims());
+        var claimId = Guid.Parse(getClaim.GetUserIdFromClaims());
         var result = await userManager.Users.AsNoTracking().FirstOrDefaultAsync(x => x.Id == claimId);
         if (result == null)
             throw new KeyNotFoundException("USE - User Not Found");
@@ -58,7 +58,7 @@ public class UserService(UserManager<User> userManager, ValidateOwnerExtension v
         if (result == null)
             throw new KeyNotFoundException("USE - User Not Found");
         
-        if (!validateOwner.IsOwner(result.Id))
+        if (!getClaim.IsOwner(result.Id))
             throw new UnauthorizedAccessException("Only the owner has the access to perform this action.");
         
         result.Email = dto.Email;
@@ -75,7 +75,7 @@ public class UserService(UserManager<User> userManager, ValidateOwnerExtension v
         if (result == null)
             throw new KeyNotFoundException("USE - User Not Found");
         
-        if (!validateOwner.IsOwner(result.Id))
+        if (!getClaim.IsOwner(result.Id))
             throw new UnauthorizedAccessException("Only the owner has the access to perform this action.");
         
         await userManager.DeleteAsync(result);

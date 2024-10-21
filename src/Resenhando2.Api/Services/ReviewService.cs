@@ -2,24 +2,20 @@ using Microsoft.EntityFrameworkCore;
 using Resenhando2.Api.Data;
 using Resenhando2.Api.Extensions;
 using Resenhando2.Core.Dtos.ReviewDto;
-using Resenhando2.Core.Entities.Review;
-using Resenhando2.Core.ValueObjects.Review;
+using Resenhando2.Core.Entities;
 
-namespace Resenhando2.Api.Services.ReviewServices;
+namespace Resenhando2.Api.Services;
 
-public class ReviewService(DataContext context, ValidateOwnerExtension validateOwner)
+public class ReviewService(DataContext context, GetClaimExtension getClaim)
 {
     public async Task<ReviewResponseDto> CreateAsync(ReviewCreateDto dto)
     {
-        var reviewText = ReviewText.Create(dto.ReviewTitle, dto.ReviewBody);
-        var result = Review.Create(dto.ReviewType, dto.SpotifyId, reviewText, dto.UserId);
+        var result = Review.Create(dto);
         
         await context.Reviews.AddAsync(result);
         await context.SaveChangesAsync();
-        
-        var review = new ReviewResponseDto(result);
 
-        return review;
+        return new ReviewResponseDto(result);
     }
     
     public async Task<ReviewResponseDto> GetByIdAsync(Guid id)
@@ -28,17 +24,14 @@ public class ReviewService(DataContext context, ValidateOwnerExtension validateO
         if (result == null)
             throw new KeyNotFoundException("REV - Review Not Found");
         
-        var review = new ReviewResponseDto(result); 
-        
-        return review;
+        return new ReviewResponseDto(result);
     }
 
     public async Task<List<ReviewResponseDto>> GetListAsync()
     {
         var result = await context.Reviews.AsNoTracking().ToListAsync();
-
-        var reviewList = result.Select(review => new ReviewResponseDto(review)).ToList();
-        return reviewList;
+        
+        return result.Select(review => new ReviewResponseDto(review)).ToList();
     }
 
     public async Task<ReviewResponseDto> Update(ReviewUpdateDto dto)
@@ -47,15 +40,13 @@ public class ReviewService(DataContext context, ValidateOwnerExtension validateO
         if (result == null)
             throw new KeyNotFoundException("REV - Review Not Found");
         
-        if (!validateOwner.IsOwner(result.UserId))
+        if (!getClaim.IsOwner(result.UserId))
             throw new UnauthorizedAccessException("Only the owner has the access to perform this action.");
         
-        result.UpdateReviewText(dto.ReviewTitle, dto.ReviewBody);
+        result.Update(dto);
         await context.SaveChangesAsync();
         
-        var review = new ReviewResponseDto(result);
-        
-        return review;
+        return new ReviewResponseDto(result);
     }
 
     public async Task<ReviewResponseDto> Delete(Guid id)
@@ -64,14 +55,12 @@ public class ReviewService(DataContext context, ValidateOwnerExtension validateO
         if (result == null)
             throw new KeyNotFoundException("REV - Review Not Found");
         
-        if (!validateOwner.IsOwner(result.UserId))
+        if (!getClaim.IsOwner(result.UserId))
             throw new UnauthorizedAccessException("Only the owner has the access to perform this action.");
 
         context.Reviews.Remove(result);
         await context.SaveChangesAsync();
-
-        var review = new ReviewResponseDto(result);
         
-        return review;
+        return new ReviewResponseDto(result);
     }
 }
