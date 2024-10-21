@@ -1,13 +1,13 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Resenhando2.Api.Services.ReviewServices;
+using Resenhando2.Api.Services;
 using Resenhando2.Core.Dtos.ReviewDto;
 
-namespace Resenhando2.Api.Controllers.ReviewController;
+namespace Resenhando2.Api.Controllers;
 
 [ApiController]
 [Authorize]
-[Route("/api/review/")]
+[Route("/api/v1/review/")]
 public class ReviewController(ReviewService reviewService) : ControllerBase
 {
     [HttpPost("")]

@@ -28,4 +28,28 @@
       <ProjectReference Include="..\Resenhando2.Core\Resenhando2.Core.csproj" />
     </ItemGroup>
 
+    <ItemGroup>
+      <Compile Remove="Services\ReviewServices\**" />
+      <Compile Remove="Services\SpotifyServices\**" />
+      <Compile Remove="Services\UserServices\**" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <EmbeddedResource Remove="Services\ReviewServices\**" />
+      <EmbeddedResource Remove="Services\SpotifyServices\**" />
+      <EmbeddedResource Remove="Services\UserServices\**" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Content Remove="Services\ReviewServices\**" />
+      <Content Remove="Services\SpotifyServices\**" />
+      <Content Remove="Services\UserServices\**" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <None Remove="Services\ReviewServices\**" />
+      <None Remove="Services\SpotifyServices\**" />
+      <None Remove="Services\UserServices\**" />
+    </ItemGroup>
+
 </Project>

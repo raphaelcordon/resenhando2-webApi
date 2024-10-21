@@ -1,4 +1,4 @@
-using Resenhando2.Core.Entities.Identity;
+using Resenhando2.Core.Entities;
 
 namespace Resenhando2.Core.Dtos.UserDto;
 

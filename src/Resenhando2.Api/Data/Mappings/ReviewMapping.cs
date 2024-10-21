@@ -1,12 +1,11 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using Resenhando2.Core.Entities.Review;
+using Resenhando2.Core.Entities;
 
 namespace Resenhando2.Api.Data.Mappings;
 
 public class ReviewMapping : IEntityTypeConfiguration<Review>
 {
-
     public void Configure(EntityTypeBuilder<Review> builder)
     {
         builder.ToTable("Review");
@@ -24,25 +23,27 @@ public class ReviewMapping : IEntityTypeConfiguration<Review>
             .HasColumnName("SpotifyId")
             .HasColumnType("NVARCHAR")
             .HasMaxLength(30);
-
-        builder.OwnsOne(x => x.ReviewText,
-            reviewText =>
-            {
-                reviewText.Property(x => x.ReviewTitle)
-                    .IsRequired()
-                    .HasColumnName("ReviewText")
-                    .HasColumnType("VARCHAR")
-                    .HasMaxLength(50);
-
-                reviewText.Property(x => x.ReviewBody)
-                    .IsRequired()
-                    .HasColumnName("ReviewBody")
-                    .HasColumnType("NVARCHAR(MAX)");
-            });
+        
+        builder.Property(x => x.ReviewTitle)
+            .IsRequired()
+            .HasColumnName("ReviewTitle")
+            .HasColumnType("VARCHAR")
+            .HasMaxLength(50);
+        
+        builder.Property(x => x.ReviewBody)
+            .IsRequired()
+            .HasColumnName("ReviewBody")
+            .HasColumnType("NVARCHAR(MAX)");
 
         builder.Property(x => x.UserId)
             .IsRequired()
             .HasColumnName("UserId")
             .HasColumnType("uniqueidentifier");
+        
+        builder.Property(x => x.YouTubeId)
+            .IsRequired(false)
+            .HasColumnName("YouTubeId")
+            .HasColumnType("NVARCHAR")
+            .HasMaxLength(30);
     }
 }

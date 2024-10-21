@@ -59,9 +59,10 @@ namespace Resenhando2.Api.Data.Migrations
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     ReviewType = table.Column<string>(type: "NVARCHAR(30)", maxLength: 30, nullable: false),
                     SpotifyId = table.Column<string>(type: "NVARCHAR(30)", maxLength: 30, nullable: false),
-                    ReviewText = table.Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false),
-                    ReviewBody = table.Column<string>(type: "NVARCHAR(MAX)", maxLength: 10000, nullable: false),
-                    UserId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
+                    ReviewTitle = table.Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false),
+                    ReviewBody = table.Column<string>(type: "NVARCHAR(MAX)", nullable: false),
+                    UserId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    YouTubeId = table.Column<string>(type: "NVARCHAR(30)", maxLength: 30, nullable: true)
                 },
                 constraints: table =>
                 {

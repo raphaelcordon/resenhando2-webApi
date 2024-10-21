@@ -3,9 +3,9 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Resenhando2.Api.Extensions;
 using Resenhando2.Core.Dtos.UserDto;
-using Resenhando2.Core.Entities.Identity;
+using Resenhando2.Core.Entities;
 
-namespace Resenhando2.Api.Services.UserServices;
+namespace Resenhando2.Api.Services;
 
 public class AuthService(
     UserManager<User> userManager, SignInManager<User> signInManager, 

@@ -2,7 +2,7 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 using Microsoft.IdentityModel.Tokens;
-using Resenhando2.Core.Entities.Identity;
+using Resenhando2.Core.Entities;
 
 namespace Resenhando2.Api.Extensions;
 
