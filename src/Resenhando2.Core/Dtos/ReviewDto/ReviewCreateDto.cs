@@ -3,10 +3,8 @@ using Resenhando2.Core.Enums;
 
 namespace Resenhando2.Core.Dtos.ReviewDto;
 
-public class ReviewCreateDto(ReviewType reviewType, string spotifyId, string reviewTitle, string reviewBody, string? youTubeId = null)
+public class ReviewCreateDto(string spotifyId, string reviewTitle, string reviewBody, string? youTubeId = null)
 {
-    [Required] public ReviewType ReviewType { get; private set; } = reviewType;
-
     [Required] public string SpotifyId { get; private set; } = spotifyId;
 
     [Required]

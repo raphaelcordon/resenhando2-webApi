@@ -3,6 +3,7 @@ using Resenhando2.Api.Data;
 using Resenhando2.Api.Extensions;
 using Resenhando2.Core.Dtos.ReviewDto;
 using Resenhando2.Core.Entities;
+using Resenhando2.Core.Enums;
 
 namespace Resenhando2.Api.Services;
 
@@ -10,8 +11,9 @@ public class ReviewService(DataContext context, GetClaimExtension getClaim)
 {
     public async Task<ReviewResponseDto> CreateAsync(ReviewCreateDto dto)
     {
+        var reviewType = ReviewType.Artist;
         var userId = Guid.Parse(getClaim.GetUserIdFromClaims());
-        var result = Review.Create(dto, userId);
+        var result = Review.Create(dto, reviewType, userId);
         
         await context.Reviews.AddAsync(result);
         await context.SaveChangesAsync();
