@@ -1,3 +1,4 @@
+using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Resenhando2.Api.Extensions;
@@ -61,9 +62,26 @@ public class UserService(UserManager<User> userManager, GetClaimExtension getCla
         if (!getClaim.IsOwner(result.Id))
             throw new UnauthorizedAccessException("Only the owner has the access to perform this action.");
         
-        result.Email = dto.Email;
         result.FirstName = dto.FirstName;
         result.LastName = dto.LastName;
+        await userManager.UpdateAsync(result);
+        
+        return new UserResponseDto(result);
+    }
+    
+    public async Task<UserResponseDto> UpdateEmail(UserUpdateEmailDto dto)
+    {
+        var isEmailRegistered = await userManager.Users.AsNoTracking().FirstOrDefaultAsync(x => x.Email == dto.Email);
+        if (isEmailRegistered != null)
+            throw new ValidationException("This e-mail is already registered");
+        var result = await userManager.Users.FirstOrDefaultAsync(x => x.Id == dto.Id);
+        if (result == null)
+            throw new KeyNotFoundException("USE - User Not Found");
+        
+        if (!getClaim.IsOwner(result.Id))
+            throw new UnauthorizedAccessException("Only the owner has the access to perform this action.");
+        
+        result.Email = dto.Email;
         await userManager.UpdateAsync(result);
         
         return new UserResponseDto(result);

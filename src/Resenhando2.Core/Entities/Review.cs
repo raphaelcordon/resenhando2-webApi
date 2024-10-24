@@ -22,9 +22,9 @@ public class Review : Base
         YouTubeId = youTubeId;
     }
     
-    public static Review Create(ReviewCreateDto dto)
+    public static Review Create(ReviewCreateDto dto, Guid userId)
     {
-        return new Review(dto.ReviewType, dto.SpotifyId, dto.ReviewTitle, dto.ReviewBody, dto.UserId, dto.YouTubeId);
+        return new Review(dto.ReviewType, dto.SpotifyId, dto.ReviewTitle, dto.ReviewBody, userId, dto.YouTubeId);
     }
     public void Update(ReviewUpdateDto dto)
     {
