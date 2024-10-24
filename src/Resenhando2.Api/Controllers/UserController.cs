@@ -49,6 +49,13 @@ public class UserController(UserService userService) : ControllerBase
         return Ok(result);
     }
     
+    [HttpPut("Email")]
+    public async Task<IActionResult> UpdateEmail([FromBody] UserUpdateEmailDto dto)
+    {
+        var result = await userService.UpdateEmail(dto);
+        return Ok(result);
+    }
+    
     [HttpDelete("{id:guid}")]
     public async Task<IActionResult> Delete(Guid id)
     {

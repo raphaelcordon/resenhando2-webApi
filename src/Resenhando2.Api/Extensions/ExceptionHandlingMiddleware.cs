@@ -27,31 +27,21 @@ public class ExceptionHandlingMiddleware : IMiddleware
         {
             case ValidationException validationException:
                 statusCode = HttpStatusCode.BadRequest;
-                errorResponse = ErrorResponse.ValidationError(validationException.Message);
+                errorResponse = new ErrorResponse(validationException.Message, null);
                 break;
             
             case UnauthorizedAccessException _:
                 statusCode = HttpStatusCode.Unauthorized;
-                errorResponse = new ErrorResponse
-                {
-                    Message = "Unauthorized access.",
-                };
+                errorResponse = new ErrorResponse("Unauthorized access.", null);
                 break;
             
             case KeyNotFoundException notFoundException:
                 statusCode = HttpStatusCode.NotFound;
-                errorResponse = new ErrorResponse
-                {
-                    Message = notFoundException.Message
-                };
+                errorResponse = new ErrorResponse(notFoundException.Message, null);
                 break;
             default:
                 statusCode = HttpStatusCode.InternalServerError;
-                errorResponse = new ErrorResponse
-                {
-                    Message = "Internal server error.",
-                    Details = exception.Message
-                };
+                errorResponse = new ErrorResponse("Internal server error.", exception.Message);
                 break;
         }
 
@@ -61,17 +51,4 @@ public class ExceptionHandlingMiddleware : IMiddleware
     }
 }
 
-public class ErrorResponse
-{
-    public string? Message { get; set; }
-    public string? Details { get; set; }
-
-    public static ErrorResponse ValidationError(string validationError)
-    {
-        return new ErrorResponse
-        {
-            Message = "Validation error occurred.",
-            Details = validationError
-        };
-    }
-}
+public record ErrorResponse(string? Message, string? Details);

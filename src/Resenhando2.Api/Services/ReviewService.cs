@@ -10,7 +10,8 @@ public class ReviewService(DataContext context, GetClaimExtension getClaim)
 {
     public async Task<ReviewResponseDto> CreateAsync(ReviewCreateDto dto)
     {
-        var result = Review.Create(dto);
+        var userId = Guid.Parse(getClaim.GetUserIdFromClaims());
+        var result = Review.Create(dto, userId);
         
         await context.Reviews.AddAsync(result);
         await context.SaveChangesAsync();
