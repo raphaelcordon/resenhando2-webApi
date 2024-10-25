@@ -32,5 +32,17 @@ public class SpotifyService
         var searchResponse = await _spotifyClient.Search.Item(searchRequest);
 
         return  searchResponse.Artists.Items?.ToArtists() ?? [];
+    }    
+    public async Task<SpotifyAlbum> GetAlbumByIdAsync(string id)
+    {
+        var result = await _spotifyClient.Albums.Get(id);
+        
+        return SpotifyAlbum.CreateFullAlbum(result);
+    }
+
+    public async Task<SpotifyArtistAlbums> GetAlbumsByArtist(string id)
+    {
+        var result = await _spotifyClient.Artists.GetAlbums(id);
+        return SpotifyArtistAlbums.CreateArtistAlbums(result);
     }
 }

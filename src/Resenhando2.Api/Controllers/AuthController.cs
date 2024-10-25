@@ -8,7 +8,7 @@ namespace Resenhando2.Api.Controllers;
 [Route("api/v1/auth")]
 public class AuthController(AuthService authService) : ControllerBase
 {
-    [HttpPost("Login")]
+    [HttpPost("login")]
     public async Task<IActionResult> Login(UserLoginDto dto)
     {
         var result = await authService.LoginUserAsync(dto);

@@ -49,7 +49,7 @@ public class UserController(UserService userService) : ControllerBase
         return Ok(result);
     }
     
-    [HttpPut("Email")]
+    [HttpPut("email")]
     public async Task<IActionResult> UpdateEmail([FromBody] UserUpdateEmailDto dto)
     {
         var result = await userService.UpdateEmail(dto);
