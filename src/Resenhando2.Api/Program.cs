@@ -12,14 +12,14 @@ builder.Services.AddSwaggerWithJwtSupport(builder.Configuration);
 // To deal with FE requisitions
 builder.Services.AddCors(options =>
 {
-    options.AddPolicy("AllowSpecificOrigin",
-        builder =>
-        {
-            builder.WithOrigins()//"http://localhost:5173"
-                .AllowAnyHeader()
-                .AllowAnyMethod();
-        });
+    options.AddPolicy("AllowAllOrigins", builder =>
+    {
+        builder.AllowAnyOrigin() // Allows requests from any origin
+            .AllowAnyHeader() // Allows any headers
+            .AllowAnyMethod(); // Allows any HTTP methods (GET, POST, etc.)
+    });
 });
+
 
 var app = builder.Build();
 
@@ -38,7 +38,7 @@ app.UseHttpsRedirection();
 app.UseMiddleware<ExceptionHandlingMiddleware>();
 
 app.MapControllers();
-app.UseCors("AllowSpecificOrigin");
+app.UseCors("AllowAllOrigins");
 
 if (app.Environment.IsDevelopment())
 {
