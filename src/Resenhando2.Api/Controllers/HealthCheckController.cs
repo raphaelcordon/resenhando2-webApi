@@ -3,12 +3,19 @@ using Microsoft.AspNetCore.Mvc;
 namespace Resenhando2.Api.Controllers;
 
 [ApiController]
-[Route("api/v1/healthcheck")]
+[Route("")]
 public class HealthCheckController : ControllerBase
 {
-    [HttpGet("")]
+    [HttpGet("/")]
+    public IActionResult Home()
+    {
+        return Ok("RESENHANDO 2.0 Web API is up and running.\n \n" +
+                  "Go to '/api/healthcheck' for more information.");
+    }
+    
+    [HttpGet("api/healthcheck")]
     public IActionResult HealthCheck()
     {
-        return Ok("RESENHANDO 2.0 Web API is up and running.");
+        return Ok("Health check is under construction.");
     }
 }
