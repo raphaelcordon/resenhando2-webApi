@@ -1,19 +1,19 @@
 using Microsoft.EntityFrameworkCore;
 using Resenhando2.Api.Data;
 using Resenhando2.Api.Extensions;
+using Resenhando2.Core.Dtos;
 using Resenhando2.Core.Dtos.ReviewDto;
 using Resenhando2.Core.Entities;
-using Resenhando2.Core.Enums;
 
 namespace Resenhando2.Api.Services;
 
-public class ReviewService(DataContext context, GetClaimExtension getClaim)
+public class ReviewService(DataContext context, GetClaimExtension getClaim, SpotifyService spotifyService)
 {
     public async Task<ReviewResponseDto> CreateAsync(ReviewCreateDto dto)
     {
-        var reviewType = ReviewType.Artist;
         var userId = Guid.Parse(getClaim.GetUserIdFromClaims());
-        var result = Review.Create(dto, reviewType, userId);
+        var coverImage = await spotifyService.GetArtistImageUrlAsync(dto.SpotifyId);
+        var result = Review.Create(dto, coverImage, userId);
         
         await context.Reviews.AddAsync(result);
         await context.SaveChangesAsync();
@@ -30,11 +30,21 @@ public class ReviewService(DataContext context, GetClaimExtension getClaim)
         return new ReviewResponseDto(result);
     }
 
-    public async Task<List<ReviewResponseDto>> GetListAsync()
+    public async Task<PagedResultDto<ReviewResponseDto>> GetListAsync(int skip = 0, int take = 10)
     {
-        var result = await context.Reviews.AsNoTracking().ToListAsync();
+        var result = await context.Reviews
+            .AsNoTracking()
+            .OrderBy(r => r.CreatedAt)
+            .Skip(skip)
+            .Take(take)
+            .Select(r => new { TotalCount = context.Reviews.Count(), Review = r })
+            .ToListAsync();
+
+        var totalCount = result.Any() ? result.First().TotalCount : 0;
         
-        return result.Select(review => new ReviewResponseDto(review)).ToList();
+        var reviewDtos = result.Select(r => new ReviewResponseDto(r.Review)).ToList();
+
+        return new PagedResultDto<ReviewResponseDto>(reviewDtos, totalCount);
     }
 
     public async Task<ReviewResponseDto> Update(ReviewUpdateDto dto)

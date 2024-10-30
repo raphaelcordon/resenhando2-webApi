@@ -27,9 +27,9 @@ public class ReviewController(ReviewService reviewService) : ControllerBase
     
     [HttpGet("")]
     [AllowAnonymous]
-    public async Task<IActionResult> GetList()
+    public async Task<IActionResult> GetList(int skip = 0, int take = 10)
     {
-        var result = await reviewService.GetListAsync();
+        var result = await reviewService.GetListAsync(skip, take);
         return Ok(result);
     }
 

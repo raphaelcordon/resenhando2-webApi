@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Resenhando2.Api.Data;
 
@@ -11,9 +12,11 @@ using Resenhando2.Api.Data;
 namespace Resenhando2.Api.Data.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20241029160813_ImplementingCoverImageReview")]
+    partial class ImplementingCoverImageReview
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -165,10 +168,6 @@ namespace Resenhando2.Api.Data.Migrations
                         .HasColumnType("NVARCHAR")
                         .HasColumnName("CoverImage");
 
-                    b.Property<DateTimeOffset>("CreatedAt")
-                        .HasColumnType("DATETIMEOFFSET")
-                        .HasColumnName("CreatedAt");
-
                     b.Property<string>("ReviewBody")
                         .IsRequired()
                         .HasColumnType("NVARCHAR(MAX)")
@@ -193,7 +192,7 @@ namespace Resenhando2.Api.Data.Migrations
                         .HasColumnName("SpotifyId");
 
                     b.Property<Guid>("UserId")
-                        .HasColumnType("UNIQUEIDENTIFIER")
+                        .HasColumnType("uniqueidentifier")
                         .HasColumnName("UserId");
 
                     b.Property<string>("YouTubeId")

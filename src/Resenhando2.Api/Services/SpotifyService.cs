@@ -45,4 +45,11 @@ public class SpotifyService
         var result = await _spotifyClient.Artists.GetAlbums(id);
         return SpotifyArtistAlbums.CreateArtistAlbums(result);
     }
+
+    public async Task<string> GetArtistImageUrlAsync(string id)
+    {
+        var artist = await GetArtistByIdAsync(id);
+        var url = artist.Images?.FirstOrDefault()?.Url;
+        return !string.IsNullOrEmpty(url) ? url : "";
+    }
 }
