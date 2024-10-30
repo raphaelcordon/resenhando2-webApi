@@ -24,6 +24,12 @@ public class ReviewMapping : IEntityTypeConfiguration<Review>
             .HasColumnType("NVARCHAR")
             .HasMaxLength(30);
         
+        builder.Property(x => x.CoverImage)
+            .IsRequired()
+            .HasColumnName("CoverImage")
+            .HasColumnType("NVARCHAR")
+            .HasMaxLength(100);
+        
         builder.Property(x => x.ReviewTitle)
             .IsRequired()
             .HasColumnName("ReviewTitle")
@@ -38,12 +44,17 @@ public class ReviewMapping : IEntityTypeConfiguration<Review>
         builder.Property(x => x.UserId)
             .IsRequired()
             .HasColumnName("UserId")
-            .HasColumnType("uniqueidentifier");
+            .HasColumnType("UNIQUEIDENTIFIER");
         
         builder.Property(x => x.YouTubeId)
             .IsRequired(false)
             .HasColumnName("YouTubeId")
             .HasColumnType("NVARCHAR")
             .HasMaxLength(30);
+        
+        builder.Property(x => x.CreatedAt)
+            .IsRequired()
+            .HasColumnName("CreatedAt")
+            .HasColumnType("DATETIMEOFFSET");
     }
 }

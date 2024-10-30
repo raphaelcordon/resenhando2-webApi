@@ -6,15 +6,19 @@ namespace Resenhando2.Core.Entities;
 public class Review : Base
 {
     public string SpotifyId { get; private set; }
+    public string CoverImage { get; private set; }
     public string ReviewTitle { get; private set; }
     public string ReviewBody { get; private set; }
     public ReviewType ReviewType { get; private set; }
     public Guid UserId { get; private set; }
     public string? YouTubeId { get; private set; }
+    
+    public DateTimeOffset CreatedAt { get; private set; } = DateTimeOffset.UtcNow;
 
-    private Review(string spotifyId, string reviewTitle, string reviewBody, ReviewType reviewType, Guid userId, string? youTubeId = null)
+    private Review(string spotifyId, string coverImage, string reviewTitle, string reviewBody, ReviewType reviewType, Guid userId, string? youTubeId = null)
     {
         SpotifyId = spotifyId;
+        CoverImage = coverImage;
         ReviewTitle = reviewTitle;
         ReviewBody = reviewBody;
         ReviewType = reviewType;
@@ -22,9 +26,9 @@ public class Review : Base
         YouTubeId = youTubeId;
     }
     
-    public static Review Create(ReviewCreateDto dto, ReviewType reviewType,Guid userId)
+    public static Review Create(ReviewCreateDto dto, string coverImage, Guid userId)
     {
-        return new Review(dto.SpotifyId, dto.ReviewTitle, dto.ReviewBody, reviewType ,userId, dto.YouTubeId);
+        return new Review(dto.SpotifyId, coverImage, dto.ReviewTitle, dto.ReviewBody, dto.ReviewType ,userId, dto.YouTubeId);
     }
     public void Update(ReviewUpdateDto dto)
     {

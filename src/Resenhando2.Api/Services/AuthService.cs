@@ -26,7 +26,7 @@ public class AuthService(
             throw new ValidationException("AUT2 - Email or password incorrect");
         
         var token = tokenService.GenerateToken(user);
-        var result = new AuthResponseDto(new UserLoggedInResponseDto(user.Email, user.FirstName, user.LastName), token);
+        var result = new AuthResponseDto(new UserLoggedInResponseDto(user.Email!, user.FirstName, user.LastName), token);
 
         return result;
     }
