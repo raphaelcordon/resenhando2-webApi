@@ -3,20 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
-using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Resenhando2.Api.Data;
 
 #nullable disable
 
-namespace Resenhando2.Api.Data.Migrations
+namespace Resenhando2.Api.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20241030074112_AddCreatedAtReview")]
-    partial class AddCreatedAtReview
+    partial class DataContextModelSnapshot : ModelSnapshot
     {
-        /// <inheritdoc />
-        protected override void BuildTargetModel(ModelBuilder modelBuilder)
+        protected override void BuildModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
