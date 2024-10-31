@@ -65,10 +65,7 @@ public static class DependencyInjections
         services.AddScoped<SpotifyService>();
         
         // Services
-        // services.AddAuthorization(options =>
-        // {
-        //     options.AddPolicy("", policy => policy.AddRequirements());
-        // });
+        services.AddMemoryCache();
         services.AddScoped<AuthService>();
         services.AddScoped<JwtTokenServiceExtension>();
         services.AddScoped<UserService>();
