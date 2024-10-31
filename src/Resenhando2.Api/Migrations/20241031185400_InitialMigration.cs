@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
-namespace Resenhando2.Api.Data.Migrations
+namespace Resenhando2.Api.Migrations
 {
     /// <inheritdoc />
     public partial class InitialMigration : Migration
@@ -57,12 +57,14 @@ namespace Resenhando2.Api.Data.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    ReviewType = table.Column<string>(type: "NVARCHAR(30)", maxLength: 30, nullable: false),
                     SpotifyId = table.Column<string>(type: "NVARCHAR(30)", maxLength: 30, nullable: false),
+                    CoverImage = table.Column<string>(type: "NVARCHAR(100)", maxLength: 100, nullable: false),
                     ReviewTitle = table.Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false),
                     ReviewBody = table.Column<string>(type: "NVARCHAR(MAX)", nullable: false),
-                    UserId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    YouTubeId = table.Column<string>(type: "NVARCHAR(30)", maxLength: 30, nullable: true)
+                    ReviewType = table.Column<string>(type: "NVARCHAR(30)", maxLength: 30, nullable: false),
+                    UserId = table.Column<Guid>(type: "UNIQUEIDENTIFIER", nullable: false),
+                    YouTubeId = table.Column<string>(type: "NVARCHAR(30)", maxLength: 30, nullable: true),
+                    CreatedAt = table.Column<DateTimeOffset>(type: "DATETIMEOFFSET", nullable: false)
                 },
                 constraints: table =>
                 {

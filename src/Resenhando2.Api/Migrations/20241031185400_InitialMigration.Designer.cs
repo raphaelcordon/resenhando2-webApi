@@ -9,10 +9,10 @@ using Resenhando2.Api.Data;
 
 #nullable disable
 
-namespace Resenhando2.Api.Data.Migrations
+namespace Resenhando2.Api.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20241021094801_InitialMigration")]
+    [Migration("20241031185400_InitialMigration")]
     partial class InitialMigration
     {
         /// <inheritdoc />
@@ -162,6 +162,16 @@ namespace Resenhando2.Api.Data.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<string>("CoverImage")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("NVARCHAR")
+                        .HasColumnName("CoverImage");
+
+                    b.Property<DateTimeOffset>("CreatedAt")
+                        .HasColumnType("DATETIMEOFFSET")
+                        .HasColumnName("CreatedAt");
+
                     b.Property<string>("ReviewBody")
                         .IsRequired()
                         .HasColumnType("NVARCHAR(MAX)")
@@ -186,7 +196,7 @@ namespace Resenhando2.Api.Data.Migrations
                         .HasColumnName("SpotifyId");
 
                     b.Property<Guid>("UserId")
-                        .HasColumnType("uniqueidentifier")
+                        .HasColumnType("UNIQUEIDENTIFIER")
                         .HasColumnName("UserId");
 
                     b.Property<string>("YouTubeId")
