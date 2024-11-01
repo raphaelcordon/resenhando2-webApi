@@ -1,15 +1,15 @@
 using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using Resenhando2.Api.Extensions;
 using Resenhando2.Core.Dtos.UserDto;
 using Resenhando2.Core.Entities;
+using Resenhando2.Core.Interfaces;
 
 namespace Resenhando2.Api.Services;
 
 public class AuthService(
     UserManager<User> userManager, SignInManager<User> signInManager, 
-    JwtTokenServiceExtension tokenService)
+    IJwtTokenServiceExtension tokenService) : IAuthService
 {
     public async Task<AuthResponseDto> LoginUserAsync(UserLoginDto dto)
     {

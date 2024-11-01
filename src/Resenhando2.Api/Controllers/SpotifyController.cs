@@ -1,11 +1,11 @@
 using Microsoft.AspNetCore.Mvc;
-using Resenhando2.Api.Services;
+using Resenhando2.Core.Interfaces;
 
 namespace Resenhando2.Api.Controllers;
 
 [ApiController]
 [Route("/api/v1/spotify/")]
-public class SpotifyController(SpotifyService spotifyService) : ControllerBase
+public class SpotifyController(ISpotifyService spotifyService) : ControllerBase
 {
     [HttpGet("artist/{id}")]
     public async Task<IActionResult> GetArtistById(string id)

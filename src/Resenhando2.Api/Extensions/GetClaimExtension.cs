@@ -1,8 +1,9 @@
 using System.Security.Claims;
+using Resenhando2.Core.Interfaces;
 
 namespace Resenhando2.Api.Extensions;
 
-public class GetClaimExtension(IHttpContextAccessor httpContext)
+public class GetClaimExtension(IHttpContextAccessor httpContext) : IGetClaimExtension
 {
     public bool IsOwner(Guid id)
     {

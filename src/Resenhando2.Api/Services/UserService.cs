@@ -1,13 +1,13 @@
 using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using Resenhando2.Api.Extensions;
 using Resenhando2.Core.Dtos.UserDto;
 using Resenhando2.Core.Entities;
+using Resenhando2.Core.Interfaces;
 
 namespace Resenhando2.Api.Services;
 
-public class UserService(UserManager<User> userManager, GetClaimExtension getClaim)
+public class UserService(UserManager<User> userManager, IGetClaimExtension getClaim) : IUserService
 {
     public async Task<IdentityResult> CreateAsync(UserCreateDto dto)
     {

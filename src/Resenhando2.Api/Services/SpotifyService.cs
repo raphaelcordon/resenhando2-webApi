@@ -1,10 +1,11 @@
 using Microsoft.Extensions.Caching.Memory;
 using Resenhando2.Core.Entities.SpotifyEntities;
+using Resenhando2.Core.Interfaces;
 using SpotifyAPI.Web;
 
 namespace Resenhando2.Api.Services;
 
-public class SpotifyService
+public class SpotifyService : ISpotifyService
 {
     private readonly SpotifyClient _spotifyClient;
     private readonly IMemoryCache _cache;
@@ -22,7 +23,7 @@ public class SpotifyService
     
     public async Task<SpotifyArtist> GetArtistByIdAsync(string id)
     {
-        if (_cache.TryGetValue($"SpotifyArtist_{id}", out SpotifyArtist cachedArtist)) return cachedArtist!;
+        if (_cache.TryGetValue($"SpotifyArtist_{id}", out SpotifyArtist? cachedArtist)) return cachedArtist!;
         var result = await _spotifyClient.Artists.Get(id);
         cachedArtist = result.ToArtist();
         
@@ -36,7 +37,7 @@ public class SpotifyService
 
     public async Task<List<SpotifyArtist>> SearchArtistsByNameAsync(string searchItem, int limit)
     {
-        if (_cache.TryGetValue($"SearchArtists_{searchItem}_{limit}", out List<SpotifyArtist> cachedArtists))
+        if (_cache.TryGetValue($"SearchArtists_{searchItem}_{limit}", out List<SpotifyArtist>? cachedArtists))
         {
             return cachedArtists!;
         }
@@ -47,7 +48,7 @@ public class SpotifyService
             Limit = limit
         };
         var searchResponse = await _spotifyClient.Search.Item(searchRequest);
-        cachedArtists = searchResponse.Artists.Items?.ToArtists() ?? new List<SpotifyArtist>();
+        cachedArtists = searchResponse.Artists.Items?.ToArtists() ?? [];
 
         var cacheOptions = new MemoryCacheEntryOptions().SetAbsoluteExpiration(TimeSpan.FromMinutes(10));
         _cache.Set($"SearchArtists_{searchItem}_{limit}", cachedArtists, cacheOptions);
@@ -57,7 +58,7 @@ public class SpotifyService
     
     public async Task<SpotifyAlbum> GetAlbumByIdAsync(string id)
     {
-        if (_cache.TryGetValue($"SpotifyAlbum_{id}", out SpotifyAlbum cachedAlbum))
+        if (_cache.TryGetValue($"SpotifyAlbum_{id}", out SpotifyAlbum? cachedAlbum))
         {
             return cachedAlbum!;
         }
@@ -73,7 +74,7 @@ public class SpotifyService
     
     public async Task<SpotifyArtistAlbums> GetAlbumsByArtist(string id)
     {
-        if (_cache.TryGetValue($"AlbumsByArtist_{id}", out SpotifyArtistAlbums cachedArtistAlbums))
+        if (_cache.TryGetValue($"AlbumsByArtist_{id}", out SpotifyArtistAlbums? cachedArtistAlbums))
         {
             return cachedArtistAlbums!;
         }
@@ -89,13 +90,13 @@ public class SpotifyService
 
     public async Task<string> GetArtistImageUrlAsync(string id)
     {
-        if (_cache.TryGetValue($"ArtistImageUrl_{id}", out string cachedImageUrl))
+        if (_cache.TryGetValue($"ArtistImageUrl_{id}", out string? cachedImageUrl))
         {
-            return cachedImageUrl;
+            return cachedImageUrl!;
         }
 
         var artist = await GetArtistByIdAsync(id);
-        var url = artist.Images?.FirstOrDefault()?.Url ?? "";
+        var url = artist.Images.FirstOrDefault()?.Url ?? "";
         
         var cacheOptions = new MemoryCacheEntryOptions().SetAbsoluteExpiration(TimeSpan.FromMinutes(10));
         _cache.Set($"ArtistImageUrl_{id}", url, cacheOptions);
