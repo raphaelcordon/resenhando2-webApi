@@ -1,15 +1,15 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Caching.Memory;
 using Resenhando2.Api.Data;
-using Resenhando2.Api.Extensions;
 using Resenhando2.Core.Dtos;
 using Resenhando2.Core.Dtos.ReviewDto;
 using Resenhando2.Core.Dtos.UserDto;
 using Resenhando2.Core.Entities;
+using Resenhando2.Core.Interfaces;
 
 namespace Resenhando2.Api.Services;
 
-public class ReviewService(DataContext context, GetClaimExtension getClaim, SpotifyService spotifyService, IMemoryCache cache)
+public class ReviewService(DataContext context, IGetClaimExtension getClaim, ISpotifyService spotifyService, IMemoryCache cache) : IReviewService
 {
     public async Task<ReviewResponseDto> CreateAsync(ReviewCreateDto dto)
     {
@@ -49,12 +49,12 @@ public class ReviewService(DataContext context, GetClaimExtension getClaim, Spot
             .Select(u => new UserResponseDto(u))
             .FirstOrDefaultAsync();
 
-        return new ReviewResponseDto(review, user);
+        return new ReviewResponseDto(review, user!);
     }
 
     public async Task<PagedResultDto<ReviewResponseDto>> GetListAsync(int skip = 0, int take = 10)
     {
-        if (cache.TryGetValue("ReviewList", out PagedResultDto<ReviewResponseDto> cachedReviews)) return cachedReviews!;
+        if (cache.TryGetValue("ReviewList", out PagedResultDto<ReviewResponseDto>? cachedReviews)) return cachedReviews!;
         var reviewsQuery = context.Reviews
             .AsNoTracking()
             .OrderBy(r => r.CreatedAt)
@@ -72,7 +72,7 @@ public class ReviewService(DataContext context, GetClaimExtension getClaim, Spot
         var result = await reviewsQuery.ToListAsync();
         var totalCount = await context.Reviews.CountAsync();
         
-        var reviewDtos = result.Select(r => new ReviewResponseDto(r.Review, r.User)).ToList();
+        var reviewDtos = result.Select(r => new ReviewResponseDto(r.Review, r.User!)).ToList();
 
         cachedReviews = new PagedResultDto<ReviewResponseDto>(reviewDtos, totalCount);
         cache.Set("ReviewList", cachedReviews);

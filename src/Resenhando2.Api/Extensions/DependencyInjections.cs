@@ -7,6 +7,7 @@ using Resenhando2.Api.Data;
 using Resenhando2.Api.Services;
 using Resenhando2.Core.Entities;
 using Resenhando2.Core.Entities.SpotifyEntities;
+using Resenhando2.Core.Interfaces;
 
 namespace Resenhando2.Api.Extensions;
 
@@ -62,15 +63,16 @@ public static class DependencyInjections
                                   configuration["Spotify:clientSecret"];
         
         services.AddScoped(_ => new SpotifyAuthConfig(spotifyClientId, spotifyClientSecret));
-        services.AddScoped<SpotifyService>();
         
         // Services
         services.AddMemoryCache();
-        services.AddScoped<AuthService>();
-        services.AddScoped<JwtTokenServiceExtension>();
-        services.AddScoped<UserService>();
-        services.AddScoped<ReviewService>();
-        services.AddScoped<GetClaimExtension>();
+        services.AddScoped<IAuthService, AuthService>();
+        services.AddScoped<IGetClaimExtension, GetClaimExtension>();
+        services.AddScoped<IJwtTokenServiceExtension, JwtTokenServiceExtension>();
+        services.AddScoped<IReviewService, ReviewService>();
+        services.AddScoped<ISpotifyService, SpotifyService>();
+        services.AddScoped<IUserService, UserService>();
+        
         services.AddTransient<ExceptionHandlingMiddleware>();
         
         return services;

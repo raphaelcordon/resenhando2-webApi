@@ -3,10 +3,11 @@ using System.Security.Claims;
 using System.Text;
 using Microsoft.IdentityModel.Tokens;
 using Resenhando2.Core.Entities;
+using Resenhando2.Core.Interfaces;
 
 namespace Resenhando2.Api.Extensions;
 
-public class JwtTokenServiceExtension(IConfiguration configuration)
+public class JwtTokenServiceExtension(IConfiguration configuration) : IJwtTokenServiceExtension
 {
     public string GenerateToken(User user)
     {

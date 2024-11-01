@@ -1,14 +1,14 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Resenhando2.Api.Services;
 using Resenhando2.Core.Dtos.UserDto;
+using Resenhando2.Core.Interfaces;
 
 namespace Resenhando2.Api.Controllers;
 
 [ApiController]
 [Route("api/v1/user")]
 [Authorize]
-public class UserController(UserService userService) : ControllerBase
+public class UserController(IUserService userService) : ControllerBase
 {
     [AllowAnonymous]
     [HttpPost("")]

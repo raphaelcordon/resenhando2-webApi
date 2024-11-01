@@ -1,14 +1,14 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Resenhando2.Api.Services;
 using Resenhando2.Core.Dtos.ReviewDto;
+using Resenhando2.Core.Interfaces;
 
 namespace Resenhando2.Api.Controllers;
 
 [ApiController]
 [Authorize]
 [Route("/api/v1/review/")]
-public class ReviewController(ReviewService reviewService) : ControllerBase
+public class ReviewController(IReviewService reviewService) : ControllerBase
 {
     [HttpPost("")]
     public async Task<IActionResult> Create([FromBody] ReviewCreateDto dto)
