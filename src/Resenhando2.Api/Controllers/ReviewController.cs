@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Resenhando2.Core.Dtos.ReviewDto;
+using Resenhando2.Core.Enums;
 using Resenhando2.Core.Interfaces;
 
 namespace Resenhando2.Api.Controllers;
@@ -27,9 +28,9 @@ public class ReviewController(IReviewService reviewService) : ControllerBase
     
     [HttpGet("")]
     [AllowAnonymous]
-    public async Task<IActionResult> GetList(int skip = 0, int take = 10)
+    public async Task<IActionResult> GetList(ReviewType reviewType ,int skip = 0, int take = 10)
     {
-        var result = await reviewService.GetListAsync(skip, take);
+        var result = await reviewService.GetListAsync(reviewType, skip, take);
         return Ok(result);
     }
 

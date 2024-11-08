@@ -103,4 +103,19 @@ public class SpotifyService : ISpotifyService
 
         return url;
     }
+    public async Task<string> GetAlbumImageUrlAsync(string id)
+    {
+        if (_cache.TryGetValue($"AlbumImageUrl_{id}", out string? cachedImageUrl))
+        {
+            return cachedImageUrl!;
+        }
+
+        var album = await GetAlbumByIdAsync(id);
+        var url = album.Images.FirstOrDefault()?.Url ?? "";
+        
+        var cacheOptions = new MemoryCacheEntryOptions().SetAbsoluteExpiration(TimeSpan.FromMinutes(10));
+        _cache.Set($"AlbumImageUrl_{id}", url, cacheOptions);
+
+        return url;
+    }
 }
