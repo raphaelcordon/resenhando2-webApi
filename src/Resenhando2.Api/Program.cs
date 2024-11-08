@@ -33,12 +33,11 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 app.UseHttpsRedirection();
-app.UseHttpsRedirection();
+app.UseCors("AllowAllOrigins");
 
 app.UseMiddleware<ExceptionHandlingMiddleware>();
 
 app.MapControllers();
-app.UseCors("AllowAllOrigins");
 
 if (app.Environment.IsDevelopment())
 {
