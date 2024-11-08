@@ -33,9 +33,9 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 app.UseHttpsRedirection();
-app.UseCors("AllowAllOrigins");
 
 app.UseMiddleware<ExceptionHandlingMiddleware>();
+app.UseCors("AllowAllOrigins");
 
 app.MapControllers();
 
