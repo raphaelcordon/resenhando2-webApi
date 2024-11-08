@@ -9,4 +9,5 @@ public interface ISpotifyService
     Task<SpotifyAlbum> GetAlbumByIdAsync(string id);
     Task<SpotifyArtistAlbums> GetAlbumsByArtist(string id);
     Task<string> GetArtistImageUrlAsync(string id);
+    Task<string> GetAlbumImageUrlAsync(string id);
 }

@@ -5,6 +5,7 @@ using Resenhando2.Core.Dtos;
 using Resenhando2.Core.Dtos.ReviewDto;
 using Resenhando2.Core.Dtos.UserDto;
 using Resenhando2.Core.Entities;
+using Resenhando2.Core.Enums;
 using Resenhando2.Core.Interfaces;
 
 namespace Resenhando2.Api.Services;
@@ -24,7 +25,14 @@ public class ReviewService(DataContext context, IGetClaimExtension getClaim, ISp
             throw new KeyNotFoundException("User not found.");
         }
         
-        var coverImage = await spotifyService.GetArtistImageUrlAsync(dto.SpotifyId);
+        // Get cover image based on ReviewType
+        var coverImage = dto.ReviewType switch
+        {
+            ReviewType.Artist => await spotifyService.GetArtistImageUrlAsync(dto.SpotifyId),
+            ReviewType.Album => await spotifyService.GetAlbumImageUrlAsync(dto.SpotifyId),
+            ReviewType.Music => await spotifyService.GetArtistImageUrlAsync(dto.SpotifyId),
+            _ => string.Empty
+        };
         var result = Review.Create(dto, coverImage, userId);
         
         await context.Reviews.AddAsync(result);
@@ -52,12 +60,14 @@ public class ReviewService(DataContext context, IGetClaimExtension getClaim, ISp
         return new ReviewResponseDto(review, user!);
     }
 
-    public async Task<PagedResultDto<ReviewResponseDto>> GetListAsync(int skip = 0, int take = 10)
+    public async Task<PagedResultDto<ReviewResponseDto>> GetListAsync(ReviewType reviewType, int skip = 0, int take = 10)
     {
-        if (cache.TryGetValue("ReviewList", out PagedResultDto<ReviewResponseDto>? cachedReviews)) return cachedReviews!;
+        var cacheKey = $"{reviewType}_{skip}_{take}";
+        if (cache.TryGetValue(cacheKey, out PagedResultDto<ReviewResponseDto>? cachedReviews)) return cachedReviews!;
         var reviewsQuery = context.Reviews
             .AsNoTracking()
-            .OrderBy(r => r.CreatedAt)
+            .OrderByDescending(r => r.CreatedAt)
+            .Where(r => r.ReviewType == reviewType)
             .Skip(skip)
             .Take(take)
             .Select(r => new
@@ -70,12 +80,12 @@ public class ReviewService(DataContext context, IGetClaimExtension getClaim, ISp
             });
 
         var result = await reviewsQuery.ToListAsync();
-        var totalCount = await context.Reviews.CountAsync();
+        var totalCount = await context.Reviews.Where(x => x.ReviewType == reviewType).CountAsync();
         
         var reviewDtos = result.Select(r => new ReviewResponseDto(r.Review, r.User!)).ToList();
 
         cachedReviews = new PagedResultDto<ReviewResponseDto>(reviewDtos, totalCount);
-        cache.Set("ReviewList", cachedReviews);
+        cache.Set(cacheKey, cachedReviews);
 
         return cachedReviews;
     }
