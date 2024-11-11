@@ -62,8 +62,4 @@ jobs:
           app-name: 'resenhando2-webapi'
           slot-name: 'Production'
           package: .
-
-      - name: Clean unnecessary files
-        run: |
-          find ${{env.DOTNET_ROOT}}/myapp -name "*.runtimeconfig.json" ! -name "Resenhando2.Api.runtimeconfig.json" -delete
-    
+          
