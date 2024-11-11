@@ -30,7 +30,7 @@ public class ReviewService(DataContext context, IGetClaimExtension getClaim, ISp
         {
             ReviewType.Artist => await spotifyService.GetArtistImageUrlAsync(dto.SpotifyId),
             ReviewType.Album => await spotifyService.GetAlbumImageUrlAsync(dto.SpotifyId),
-            ReviewType.Music => await spotifyService.GetArtistImageUrlAsync(dto.SpotifyId),
+            ReviewType.Track => await spotifyService.GetArtistImageUrlAsync(dto.SpotifyId),
             _ => string.Empty
         };
         var result = Review.Create(dto, coverImage, userId);

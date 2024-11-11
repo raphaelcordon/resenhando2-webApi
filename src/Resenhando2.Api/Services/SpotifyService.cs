@@ -21,6 +21,7 @@ public class SpotifyService : ISpotifyService
         _cache = cache;
     }
     
+    // <--- A R T I S T --->
     public async Task<SpotifyArtist> GetArtistByIdAsync(string id)
     {
         if (_cache.TryGetValue($"SpotifyArtist_{id}", out SpotifyArtist? cachedArtist)) return cachedArtist!;
@@ -56,6 +57,8 @@ public class SpotifyService : ISpotifyService
         return cachedArtists;
     }
     
+    // <--- A L B U M --->
+    
     public async Task<SpotifyAlbum> GetAlbumByIdAsync(string id)
     {
         if (_cache.TryGetValue($"SpotifyAlbum_{id}", out SpotifyAlbum? cachedAlbum))
@@ -87,7 +90,66 @@ public class SpotifyService : ISpotifyService
 
         return cachedArtistAlbums;
     }
+    
+    // <--- T R A C K --->
+    public async Task<SpotifyTrack> GetTrackByIdAsync(string id)
+    {
+        if (_cache.TryGetValue($"SpotifyTrack_{id}", out SpotifyTrack? cachedTrack))
+        {
+            return cachedTrack!;
+        }
 
+        var result = await _spotifyClient.Tracks.Get(id);
+        cachedTrack = SpotifyTrack.CreateFullTrack(result);
+
+        var cacheOptions = new MemoryCacheEntryOptions().SetAbsoluteExpiration(TimeSpan.FromMinutes(10));
+        _cache.Set($"SpotifyTrack_{id}", cachedTrack, cacheOptions);
+
+        return cachedTrack;
+    }
+    
+    public async Task<List<SpotifyTrack>> SearchTracksByNameAsync(string trackName, int limit, string? artistName = null)
+    {
+        var cacheKey = artistName != null
+            ? $"SearchTracks_{trackName}_{artistName}_{limit}"
+            : $"SearchTracks_{trackName}_{limit}";
+        
+        if (_cache.TryGetValue(cacheKey, out List<SpotifyTrack>? cachedTracks))
+        {
+            return cachedTracks!;
+        }
+        
+        var formattedSearchItem = artistName != null
+            ? $"{Uri.EscapeDataString(trackName)}%20artist:{Uri.EscapeDataString(artistName)}"
+            : $"{Uri.EscapeDataString(trackName)}";
+        
+        var searchRequest = new SearchRequest(SearchRequest.Types.Track, formattedSearchItem)
+        {
+            Limit = limit
+        };
+        var searchResponse = await _spotifyClient.Search.Item(searchRequest);
+
+        var allTracks = searchResponse.Tracks.Items?
+            .Select(fullTrack => SpotifyTrack.CreateFullTrack(fullTrack))
+            .ToList() ?? new List<SpotifyTrack>();
+
+        // Filter and prioritize exact matches
+        cachedTracks = allTracks
+            .OrderByDescending(track =>
+                string.Equals(track.Name, trackName, StringComparison.OrdinalIgnoreCase) &&
+                (artistName == null || track.Artists.Any(a => string.Equals(a.Name, artistName, StringComparison.OrdinalIgnoreCase))))
+            .ToList();
+
+        // Cache the results
+        var cacheOptions = new MemoryCacheEntryOptions().SetAbsoluteExpiration(TimeSpan.FromMinutes(10));
+        _cache.Set(cacheKey, cachedTracks, cacheOptions);
+
+        return cachedTracks;
+    }
+
+
+    
+    // <--- G E T   I M A G E --->
     public async Task<string> GetArtistImageUrlAsync(string id)
     {
         if (_cache.TryGetValue($"ArtistImageUrl_{id}", out string? cachedImageUrl))
@@ -115,6 +177,21 @@ public class SpotifyService : ISpotifyService
         
         var cacheOptions = new MemoryCacheEntryOptions().SetAbsoluteExpiration(TimeSpan.FromMinutes(10));
         _cache.Set($"AlbumImageUrl_{id}", url, cacheOptions);
+
+        return url;
+    }
+    public async Task<string> GetTrackImageUrlAsync(string id)
+    {
+        if (_cache.TryGetValue($"TrackImageUrl_{id}", out string? cachedImageUrl))
+        {
+            return cachedImageUrl!;
+        }
+
+        var track = await GetTrackByIdAsync(id);
+        var url = track.Images.FirstOrDefault()?.Url ?? "";
+        
+        var cacheOptions = new MemoryCacheEntryOptions().SetAbsoluteExpiration(TimeSpan.FromMinutes(10));
+        _cache.Set($"TrackImageUrl_{id}", url, cacheOptions);
 
         return url;
     }
