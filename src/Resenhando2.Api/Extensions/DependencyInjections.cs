@@ -75,6 +75,9 @@ public static class DependencyInjections
         
         services.AddTransient<ExceptionHandlingMiddleware>();
         
+        // Health Check service (to keep the Web App up and running)
+        services.AddHostedService<HealthCheckService>();
+        
         return services;
     }
 }
