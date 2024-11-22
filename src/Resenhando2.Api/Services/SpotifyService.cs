@@ -36,9 +36,9 @@ public class SpotifyService : ISpotifyService
         return cachedArtist;
     }
 
-    public async Task<List<SpotifyArtist>> SearchArtistsByNameAsync(string searchItem, int limit)
+    public async Task<List<SpotifyArtist>> SearchArtistsByNameAsync(string searchItem, int limit, int offset)
     {
-        if (_cache.TryGetValue($"SearchArtists_{searchItem}_{limit}", out List<SpotifyArtist>? cachedArtists))
+        if (_cache.TryGetValue($"SearchArtists_{searchItem}_{limit}_{offset}", out List<SpotifyArtist>? cachedArtists))
         {
             return cachedArtists!;
         }
@@ -46,13 +46,14 @@ public class SpotifyService : ISpotifyService
         var formattedSearchItem = $"artist:{searchItem}";
         var searchRequest = new SearchRequest(SearchRequest.Types.Artist, formattedSearchItem)
         {
-            Limit = limit
+            Limit = limit,
+            Offset = offset
         };
         var searchResponse = await _spotifyClient.Search.Item(searchRequest);
         cachedArtists = searchResponse.Artists.Items?.ToArtists() ?? [];
 
         var cacheOptions = new MemoryCacheEntryOptions().SetAbsoluteExpiration(TimeSpan.FromMinutes(10));
-        _cache.Set($"SearchArtists_{searchItem}_{limit}", cachedArtists, cacheOptions);
+        _cache.Set($"SearchArtists_{searchItem}_{limit}_{offset}", cachedArtists, cacheOptions);
 
         return cachedArtists;
     }

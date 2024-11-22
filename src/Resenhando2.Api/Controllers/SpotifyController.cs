@@ -15,9 +15,9 @@ public class SpotifyController(ISpotifyService spotifyService) : ControllerBase
     }
 
     [HttpGet("artist/searchbyname/{searchItem}")]
-    public async Task<IActionResult> SearchArtistByName([FromRoute]string searchItem, [FromQuery]int limit = 5)
+    public async Task<IActionResult> SearchArtistByName([FromRoute]string searchItem, [FromQuery]int limit = 5, [FromQuery]int offset = 0)
     {
-        var result = await spotifyService.SearchArtistsByNameAsync(searchItem, limit);
+        var result = await spotifyService.SearchArtistsByNameAsync(searchItem, limit, offset);
         return Ok(result);
     }
     
