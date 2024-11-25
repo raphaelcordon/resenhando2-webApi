@@ -13,7 +13,10 @@ builder.Services.AddCors(options =>
 {
     options.AddPolicy("DefaultCorsPolicy", policy =>
     {
-        policy.WithOrigins("https://white-stone-01f4ade03.5.azurestaticapps.net")
+        policy.WithOrigins(
+                "https://white-stone-01f4ade03.5.azurestaticapps.net", 
+                "http://localhost:5173"
+            )
             .AllowAnyHeader()
             .AllowAnyMethod()
             .AllowCredentials();
