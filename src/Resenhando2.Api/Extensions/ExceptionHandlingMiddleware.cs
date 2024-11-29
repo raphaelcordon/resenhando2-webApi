@@ -29,16 +29,22 @@ public class ExceptionHandlingMiddleware : IMiddleware
                 statusCode = HttpStatusCode.BadRequest;
                 errorResponse = new ErrorResponse(validationException.Message, null);
                 break;
-            
+
             case UnauthorizedAccessException _:
                 statusCode = HttpStatusCode.Unauthorized;
                 errorResponse = new ErrorResponse("Unauthorized access.", null);
                 break;
-            
+
             case KeyNotFoundException notFoundException:
                 statusCode = HttpStatusCode.NotFound;
                 errorResponse = new ErrorResponse(notFoundException.Message, null);
                 break;
+
+            case ArgumentNullException nullException:
+                statusCode = HttpStatusCode.BadRequest;
+                errorResponse = new ErrorResponse("A required value was null.", nullException.Message);
+                break;
+
             default:
                 statusCode = HttpStatusCode.InternalServerError;
                 errorResponse = new ErrorResponse("Internal server error.", exception.Message);
@@ -49,6 +55,7 @@ public class ExceptionHandlingMiddleware : IMiddleware
         context.Response.StatusCode = (int)statusCode;
         await context.Response.WriteAsync(JsonSerializer.Serialize(errorResponse));
     }
+
 }
 
 public record ErrorResponse(string? Message, string? Details);

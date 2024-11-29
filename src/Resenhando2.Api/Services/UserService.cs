@@ -27,13 +27,19 @@ public class UserService(UserManager<User> userManager, IGetClaimExtension getCl
 
     public async Task<UserResponseDto> GetFromClaimAsync()
     {
-        var claimId = Guid.Parse(getClaim.GetUserIdFromClaims());
+        var claimIdString = getClaim.GetUserIdFromClaims();
+
+        if (string.IsNullOrWhiteSpace(claimIdString))
+            throw new UnauthorizedAccessException("User ID claim is missing.");
+
+        if (!Guid.TryParse(claimIdString, out var claimId))
+            throw new ValidationException("Invalid User ID claim format.");
+
         var result = await userManager.Users.AsNoTracking().FirstOrDefaultAsync(x => x.Id == claimId);
         if (result == null)
-            throw new KeyNotFoundException("USE - User Not Found");
-        
-        var user = new UserResponseDto(result);
-        return user;
+            throw new UnauthorizedAccessException("User not found.");
+
+        return new UserResponseDto(result);
     }
     public async Task<UserResponseDto> GetByIdAsync(Guid id)
     {
