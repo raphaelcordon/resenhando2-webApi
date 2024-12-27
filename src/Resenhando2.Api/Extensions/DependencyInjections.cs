@@ -55,6 +55,9 @@ public static class DependencyInjections
                 };
             });
         
+        // Swagger
+        services.AddSwaggerWithJwtSupport(configuration);
+        
         // Spotify
         var spotifyClientId = Environment.GetEnvironmentVariable("spotifyClientId") ??
                               configuration["Spotify:clientId"];
