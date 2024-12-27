@@ -1,3 +1,4 @@
+using Resenhando2.Core.Dtos;
 using Resenhando2.Core.Entities.SpotifyEntities;
 
 namespace Resenhando2.Core.Interfaces;
@@ -8,7 +9,7 @@ public interface ISpotifyService
     Task<List<SpotifyArtist>> SearchArtistsByNameAsync(string searchItem, int limit, int offset);
     
     Task<SpotifyAlbum> GetAlbumByIdAsync(string id);
-    Task<SpotifyArtistAlbums> GetAlbumsByArtist(string id);
+    Task<PagedResultDto<SpotifyArtistAlbums>> GetAlbumsByArtistAsync(string artistId, int limit, int offset);
     
     Task<List<SpotifyTrack>> SearchTracksByNameAsync(string searchItem, int limit, string? artistName);
     Task<SpotifyTrack> GetTrackByIdAsync(string id);

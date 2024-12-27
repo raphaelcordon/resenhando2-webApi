@@ -1,4 +1,5 @@
 using Microsoft.Extensions.Caching.Memory;
+using Resenhando2.Core.Dtos;
 using Resenhando2.Core.Entities.SpotifyEntities;
 using Resenhando2.Core.Interfaces;
 using SpotifyAPI.Web;
@@ -76,21 +77,46 @@ public class SpotifyService : ISpotifyService
         return cachedAlbum;
     }
     
-    public async Task<SpotifyArtistAlbums> GetAlbumsByArtist(string id)
+    public async Task<PagedResultDto<SpotifyArtistAlbums>> GetAlbumsByArtistAsync(string artistId, int limit, int offset)
     {
-        if (_cache.TryGetValue($"AlbumsByArtist_{id}", out SpotifyArtistAlbums? cachedArtistAlbums))
+        var cacheKey = $"AlbumsByArtist_{artistId}";
+
+        // Check if the full data is already cached
+        if (!_cache.TryGetValue(cacheKey, out SpotifyArtistAlbums? cachedArtistAlbums))
         {
-            return cachedArtistAlbums!;
+            // Fetch data from the Spotify API
+            var result = await _spotifyClient.Artists.GetAlbums(artistId);
+            cachedArtistAlbums = SpotifyArtistAlbums.CreateArtistAlbums(result);
+
+            // Cache the full result
+            var cacheOptions = new MemoryCacheEntryOptions().SetAbsoluteExpiration(TimeSpan.FromMinutes(10));
+            _cache.Set(cacheKey, cachedArtistAlbums, cacheOptions);
         }
 
-        var result = await _spotifyClient.Artists.GetAlbums(id);
-        cachedArtistAlbums = SpotifyArtistAlbums.CreateArtistAlbums(result);
+        // Paginate the Items property
+        var paginatedItems = cachedArtistAlbums.Items
+            .Skip(offset)
+            .Take(limit)
+            .ToList();
 
-        var cacheOptions = new MemoryCacheEntryOptions().SetAbsoluteExpiration(TimeSpan.FromMinutes(10));
-        _cache.Set($"AlbumsByArtist_{id}", cachedArtistAlbums, cacheOptions);
+        // Create a new instance of SpotifyArtistAlbums for the paginated data
+        var paginatedArtistAlbums = SpotifyArtistAlbums.CreatePaginated(
+            cachedArtistAlbums.Href,
+            limit,
+            null, // Next URL is not used in this context
+            offset,
+            null, // Previous URL is not used in this context
+            paginatedItems
+        );
 
-        return cachedArtistAlbums;
+        // Create and return a PagedResultDto
+        return new PagedResultDto<SpotifyArtistAlbums>(
+            items: new List<SpotifyArtistAlbums> { paginatedArtistAlbums },
+            totalCount: cachedArtistAlbums.Items.Count
+        );
     }
+
+
     
     // <--- T R A C K --->
     public async Task<SpotifyTrack> GetTrackByIdAsync(string id)

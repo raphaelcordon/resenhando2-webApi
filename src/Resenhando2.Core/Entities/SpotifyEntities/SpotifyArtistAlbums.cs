@@ -35,4 +35,15 @@ public class SpotifyArtistAlbums
             items
         );
     }
+    
+    public static SpotifyArtistAlbums CreatePaginated(
+        string? href,
+        int? limit,
+        string? next,
+        int? offset,
+        string? previous,
+        IReadOnlyCollection<SpotifyAlbum> items)
+    {
+        return new SpotifyArtistAlbums(href, limit, next, offset, previous, items);
+    }
 }

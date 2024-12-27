@@ -22,16 +22,16 @@ public class SpotifyController(ISpotifyService spotifyService) : ControllerBase
     }
     
     [HttpGet("artist/listalbums/{id}")]
-    public async Task<IActionResult> SearchAlbumsByArtistName(string id)
+    public async Task<IActionResult> SearchAlbumsByArtistName(string id, [FromQuery]int limit = 10, [FromQuery]int offset = 0)
     {
-        var result = await spotifyService.GetAlbumsByArtist(id);
+        var result = await spotifyService.GetAlbumsByArtistAsync(id, limit, offset);
         return Ok(result);
     }
     
     [HttpGet("album/{id}")]
     public async Task<IActionResult> GetAlbumById(string id)
     {
-        var result = await spotifyService.GetArtistByIdAsync(id);
+        var result = await spotifyService.GetAlbumByIdAsync(id);
         return Ok(result);
     }
     

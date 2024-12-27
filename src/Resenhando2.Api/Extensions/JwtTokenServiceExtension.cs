@@ -30,7 +30,7 @@ public class JwtTokenServiceExtension(IConfiguration configuration) : IJwtTokenS
         var signInCredentials = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
 
         var token = new JwtSecurityToken(
-            expires: DateTime.Now.AddHours(8),
+            expires: DateTime.Now.AddDays(1),
             claims: claims,
             signingCredentials: signInCredentials
         );

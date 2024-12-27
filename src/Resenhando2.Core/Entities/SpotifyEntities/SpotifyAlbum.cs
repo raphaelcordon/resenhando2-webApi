@@ -80,9 +80,9 @@ namespace Resenhando2.Core.Entities.SpotifyEntities
                 Uri = simpleAlbum.Uri,
                 Artists = simpleAlbum.Artists.Select(artist => new SpotifyArtist
                 {
+                    Name = artist.Name,
                     Href = artist.Href,
                     Id = artist.Id,
-                    Name = artist.Name,
                     Type = artist.Type,
                     Uri = artist.Uri
                 }).ToList(),
